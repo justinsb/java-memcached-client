@@ -1,4 +1,4 @@
-package net.spy.memcached.ops;
+package net.spy.nio.ops;
 
 import java.io.IOException;
 

@@ -1,7 +1,7 @@
 package net.spy.memcached.protocol.binary;
 
-import net.spy.memcached.ops.OperationCallback;
-import net.spy.memcached.ops.OperationStatus;
+import net.spy.nio.ops.OperationCallback;
+import net.spy.nio.ops.OperationStatus;
 import net.spy.memcached.ops.VersionOperation;
 
 class VersionOperationImpl extends OperationImpl implements VersionOperation {

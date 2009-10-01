@@ -10,8 +10,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import net.spy.memcached.ops.Operation;
-import net.spy.memcached.ops.OperationState;
+import net.spy.nio.internal.CheckedOperationTimeoutException;
+import net.spy.nio.ops.Operation;
+import net.spy.nio.ops.OperationState;
 
 /**
  * Future for handling results from bulk gets.

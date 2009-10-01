@@ -1,4 +1,4 @@
-package net.spy.memcached;
+package net.spy.nio;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,6 +9,8 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import net.spy.memcached.compat.SpyObject;
+import net.spy.nio.HashAlgorithm;
+import net.spy.nio.ServerNodeLocator;
 
 /**
  * This is an implementation of the Ketama consistent hash strategy from
@@ -19,22 +21,22 @@ import net.spy.memcached.compat.SpyObject;
  *
  * @see http://www.last.fm/user/RJ/journal/2007/04/10/392555/
  */
-public final class KetamaNodeLocator extends SpyObject implements NodeLocator {
+public final class KetamaNodeLocator extends SpyObject implements ServerNodeLocator {
 
 	static final int NUM_REPS = 160;
 
-	final SortedMap<Long, MemcachedNode> ketamaNodes;
-	final Collection<MemcachedNode> allNodes;
+	final SortedMap<Long, ServerNode> ketamaNodes;
+	final Collection<ServerNode> allNodes;
 
 	final HashAlgorithm hashAlg;
 
-	public KetamaNodeLocator(List<MemcachedNode> nodes, HashAlgorithm alg) {
+	public KetamaNodeLocator(List<ServerNode> nodes, HashAlgorithm alg) {
 		super();
 		allNodes = nodes;
 		hashAlg = alg;
-		ketamaNodes=new TreeMap<Long, MemcachedNode>();
+		ketamaNodes=new TreeMap<Long, ServerNode>();
 
-		for(MemcachedNode node : nodes) {
+		for(ServerNode node : nodes) {
 			// XXX:  Replace getSocketAddress() with something more precise
 			String sockStr=String.valueOf(node.getSocketAddress());
 			// Ketama does some special work with md5 where it reuses chunks.
@@ -59,20 +61,20 @@ public final class KetamaNodeLocator extends SpyObject implements NodeLocator {
 		assert ketamaNodes.size() == NUM_REPS * nodes.size();
 	}
 
-	private KetamaNodeLocator(SortedMap<Long, MemcachedNode> smn,
-			Collection<MemcachedNode> an, HashAlgorithm alg) {
+	private KetamaNodeLocator(SortedMap<Long, ServerNode> smn,
+			Collection<ServerNode> an, HashAlgorithm alg) {
 		super();
 		ketamaNodes=smn;
 		allNodes=an;
 		hashAlg=alg;
 	}
 
-	public Collection<MemcachedNode> getAll() {
+	public Collection<ServerNode> getAll() {
 		return allNodes;
 	}
 
-	public MemcachedNode getPrimary(final String k) {
-		MemcachedNode rv=getNodeForKey(hashAlg.hash(k));
+	public ServerNode getPrimary(final String k) {
+		ServerNode rv=getNodeForKey(hashAlg.hash(k));
 		assert rv != null : "Found no node for key " + k;
 		return rv;
 	}
@@ -81,12 +83,12 @@ public final class KetamaNodeLocator extends SpyObject implements NodeLocator {
 		return ketamaNodes.lastKey();
 	}
 
-	MemcachedNode getNodeForKey(long hash) {
-		final MemcachedNode rv;
+	ServerNode getNodeForKey(long hash) {
+		final ServerNode rv;
 		if(!ketamaNodes.containsKey(hash)) {
 			// Java 1.6 adds a ceilingKey method, but I'm still stuck in 1.5
 			// in a lot of places, so I'm doing this myself.
-			SortedMap<Long, MemcachedNode> tailMap=ketamaNodes.tailMap(hash);
+			SortedMap<Long, ServerNode> tailMap=ketamaNodes.tailMap(hash);
 			if(tailMap.isEmpty()) {
 				hash=ketamaNodes.firstKey();
 			} else {
@@ -97,29 +99,29 @@ public final class KetamaNodeLocator extends SpyObject implements NodeLocator {
 		return rv;
 	}
 
-	public Iterator<MemcachedNode> getSequence(String k) {
+	public Iterator<ServerNode> getSequence(String k) {
 		return new KetamaIterator(k, allNodes.size());
 	}
 
-	public NodeLocator getReadonlyCopy() {
-		SortedMap<Long, MemcachedNode> smn=new TreeMap<Long, MemcachedNode>(
+	public ServerNodeLocator getReadonlyCopy() {
+		SortedMap<Long, ServerNode> smn=new TreeMap<Long, ServerNode>(
 			ketamaNodes);
-		Collection<MemcachedNode> an=
-			new ArrayList<MemcachedNode>(allNodes.size());
+		Collection<ServerNode> an=
+			new ArrayList<ServerNode>(allNodes.size());
 
 		// Rewrite the values a copy of the map.
-		for(Map.Entry<Long, MemcachedNode> me : smn.entrySet()) {
-			me.setValue(new MemcachedNodeROImpl(me.getValue()));
+		for(Map.Entry<Long, ServerNode> me : smn.entrySet()) {
+			me.setValue(new ServerNodeROImpl(me.getValue()));
 		}
 		// Copy the allNodes collection.
-		for(MemcachedNode n : allNodes) {
-			an.add(new MemcachedNodeROImpl(n));
+		for(ServerNode n : allNodes) {
+			an.add(new ServerNodeROImpl(n));
 		}
 
 		return new KetamaNodeLocator(smn, an, hashAlg);
 	}
 
-	class KetamaIterator implements Iterator<MemcachedNode> {
+	class KetamaIterator implements Iterator<ServerNode> {
 
 		final String key;
 		long hashVal;
@@ -146,7 +148,7 @@ public final class KetamaNodeLocator extends SpyObject implements NodeLocator {
 			return remainingTries > 0;
 		}
 
-		public MemcachedNode next() {
+		public ServerNode next() {
 			try {
 				return getNodeForKey(hashVal);
 			} finally {

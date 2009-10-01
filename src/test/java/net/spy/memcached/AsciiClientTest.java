@@ -2,8 +2,8 @@ package net.spy.memcached;
 
 import java.nio.ByteBuffer;
 
-import net.spy.memcached.ops.OperationCallback;
-import net.spy.memcached.ops.OperationStatus;
+import net.spy.nio.ops.OperationCallback;
+import net.spy.nio.ops.OperationStatus;
 import net.spy.memcached.protocol.ascii.ExtensibleOperationImpl;
 
 /**

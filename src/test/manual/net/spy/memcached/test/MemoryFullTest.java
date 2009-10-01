@@ -5,8 +5,8 @@ import java.util.concurrent.ExecutionException;
 
 import net.spy.memcached.AddrUtil;
 import net.spy.memcached.MemcachedClient;
-import net.spy.memcached.ops.OperationErrorType;
-import net.spy.memcached.ops.OperationException;
+import net.spy.nio.ops.OperationErrorType;
+import net.spy.nio.ops.OperationException;
 
 /**
  * Verify what happens when the memory is full on the server.

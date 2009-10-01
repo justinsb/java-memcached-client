@@ -15,9 +15,9 @@ import net.spy.memcached.ops.GetsOperation;
 import net.spy.memcached.ops.KeyedOperation;
 import net.spy.memcached.ops.MutatorOperation;
 import net.spy.memcached.ops.Mutator;
-import net.spy.memcached.ops.Operation;
-import net.spy.memcached.ops.OperationCallback;
-import net.spy.memcached.ops.OperationStatus;
+import net.spy.nio.ops.Operation;
+import net.spy.nio.ops.OperationCallback;
+import net.spy.nio.ops.OperationStatus;
 import net.spy.memcached.ops.StoreOperation;
 import net.spy.memcached.ops.StoreType;
 

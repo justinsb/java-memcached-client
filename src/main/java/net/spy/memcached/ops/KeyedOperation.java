@@ -2,6 +2,8 @@ package net.spy.memcached.ops;
 
 import java.util.Collection;
 
+import net.spy.nio.ops.Operation;
+
 /**
  * Operations that contain keys.
  */

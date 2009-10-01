@@ -1,7 +1,7 @@
 /**
  *
  */
-package net.spy.memcached;
+package net.spy.nio;
 
 import java.io.IOException;
 import java.net.SocketAddress;
@@ -10,13 +10,13 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 import java.util.Collection;
 
-import net.spy.memcached.ops.Operation;
+import net.spy.nio.ops.Operation;
 
-class MemcachedNodeROImpl implements MemcachedNode {
+class ServerNodeROImpl implements ServerNode {
 
-	private final MemcachedNode root;
+	private final ServerNode root;
 
-	public MemcachedNodeROImpl(MemcachedNode n) {
+	public ServerNodeROImpl(ServerNode n) {
 		super();
 		root=n;
 	}

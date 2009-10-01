@@ -12,7 +12,14 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import net.spy.memcached.compat.SpyObject;
-import net.spy.memcached.ops.Operation;
+import net.spy.nio.ArrayModNodeLocator;
+import net.spy.nio.ConnectionFactory;
+import net.spy.nio.ConnectionObserver;
+import net.spy.nio.FailureMode;
+import net.spy.nio.HashAlgorithm;
+import net.spy.nio.ServerNode;
+import net.spy.nio.ServerNodeLocator;
+import net.spy.nio.ops.Operation;
 import net.spy.memcached.protocol.ascii.AsciiMemcachedNodeImpl;
 import net.spy.memcached.protocol.ascii.AsciiOperationFactory;
 import net.spy.memcached.protocol.binary.BinaryMemcachedNodeImpl;
@@ -93,7 +100,7 @@ public class DefaultConnectionFactory extends SpyObject
 		this(DEFAULT_OP_QUEUE_LEN, DEFAULT_READ_BUFFER_SIZE);
 	}
 
-	public MemcachedNode createMemcachedNode(SocketAddress sa,
+	public MemcachedNode createServerNode(SocketAddress sa,
 			SocketChannel c, int bufSize) {
 
 		OperationFactory of = getOperationFactory();
@@ -153,7 +160,7 @@ public class DefaultConnectionFactory extends SpyObject
 	/* (non-Javadoc)
 	 * @see net.spy.memcached.ConnectionFactory#createLocator(java.util.List)
 	 */
-	public NodeLocator createLocator(List<MemcachedNode> nodes) {
+	public ServerNodeLocator createLocator(List<ServerNode> nodes) {
 		return new ArrayModNodeLocator(nodes, getHashAlg());
 	}
 

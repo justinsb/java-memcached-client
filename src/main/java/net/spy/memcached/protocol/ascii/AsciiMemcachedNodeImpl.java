@@ -5,8 +5,8 @@ import java.nio.channels.SocketChannel;
 import java.util.concurrent.BlockingQueue;
 
 import net.spy.memcached.ops.GetOperation;
-import net.spy.memcached.ops.Operation;
-import net.spy.memcached.ops.OperationState;
+import net.spy.nio.ops.Operation;
+import net.spy.nio.ops.OperationState;
 import net.spy.memcached.protocol.ProxyCallback;
 import net.spy.memcached.protocol.TCPMemcachedNodeImpl;
 

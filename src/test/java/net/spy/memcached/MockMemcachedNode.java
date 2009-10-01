@@ -11,7 +11,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 import java.util.Collection;
 
-import net.spy.memcached.ops.Operation;
+import net.spy.nio.ops.Operation;
 
 public class MockMemcachedNode implements MemcachedNode {
 	private final InetSocketAddress socketAddress;

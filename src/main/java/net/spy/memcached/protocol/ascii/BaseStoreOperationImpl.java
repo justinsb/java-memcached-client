@@ -4,10 +4,10 @@ import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Collections;
 
-import net.spy.memcached.KeyUtil;
-import net.spy.memcached.ops.OperationCallback;
-import net.spy.memcached.ops.OperationState;
-import net.spy.memcached.ops.OperationStatus;
+import net.spy.nio.KeyUtil;
+import net.spy.nio.ops.OperationCallback;
+import net.spy.nio.ops.OperationState;
+import net.spy.nio.ops.OperationStatus;
 
 /**
  * Base class for ascii store operations (add, set, replace, append, prepend).

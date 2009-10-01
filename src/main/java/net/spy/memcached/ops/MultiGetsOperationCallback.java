@@ -1,5 +1,8 @@
 package net.spy.memcached.ops;
 
+import net.spy.nio.ops.MultiOperationCallback;
+import net.spy.nio.ops.OperationCallback;
+
 /**
  * MultiOperationCallback for get operations.
  */

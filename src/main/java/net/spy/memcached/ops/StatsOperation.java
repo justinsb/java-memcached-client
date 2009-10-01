@@ -1,5 +1,8 @@
 package net.spy.memcached.ops;
 
+import net.spy.nio.ops.Operation;
+import net.spy.nio.ops.OperationCallback;
+
 
 /**
  * Stats fetching operation.

@@ -1,4 +1,4 @@
-package net.spy.memcached;
+package net.spy.nio;
 
 /**
  * Thrown by {@link MemcachedClient} when any internal operations timeout.

@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.spy.memcached.ops.GetOperation;
-import net.spy.memcached.ops.OperationStatus;
+import net.spy.nio.ops.OperationStatus;
 
 /**
  * Proxy callback used for dispatching callbacks over optimized gets.

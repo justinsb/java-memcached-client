@@ -1,7 +1,9 @@
-package net.spy.memcached.ops;
+package net.spy.nio.ops;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import net.spy.nio.ops.Operation;
 
 /**
  * OperationQueueFactory that creates LinkedBlockingQueue (unbounded) operation

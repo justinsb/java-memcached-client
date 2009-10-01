@@ -1,5 +1,7 @@
 package net.spy.memcached.ops;
 
+import net.spy.nio.ops.OperationStatus;
+
 /**
  * Operation status indicating an operation was cancelled.
  */

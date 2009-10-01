@@ -7,6 +7,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import net.spy.memcached.transcoders.Transcoder;
+import net.spy.nio.ConnectionObserver;
+import net.spy.nio.ServerNodeLocator;
+import net.spy.nio.OperationTimeoutException;
 
 /**
  * This interface is provided as a helper for testing clients of the MemcachedClient.
@@ -23,7 +26,7 @@ public interface MemcachedClientIF {
 
 	Transcoder<Object> getTranscoder();
 
-	NodeLocator getNodeLocator();
+	ServerNodeLocator getNodeLocator();
 
 	Future<Boolean> append(long cas, String key, Object val);
 

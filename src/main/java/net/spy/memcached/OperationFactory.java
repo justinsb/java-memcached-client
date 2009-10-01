@@ -13,8 +13,8 @@ import net.spy.memcached.ops.KeyedOperation;
 import net.spy.memcached.ops.Mutator;
 import net.spy.memcached.ops.MutatorOperation;
 import net.spy.memcached.ops.NoopOperation;
-import net.spy.memcached.ops.Operation;
-import net.spy.memcached.ops.OperationCallback;
+import net.spy.nio.ops.Operation;
+import net.spy.nio.ops.OperationCallback;
 import net.spy.memcached.ops.StatsOperation;
 import net.spy.memcached.ops.StoreOperation;
 import net.spy.memcached.ops.StoreType;
@@ -160,7 +160,7 @@ public interface OperationFactory {
 	 *   Note that it returns more than one operation because a multi-get
 	 *   could potentially need to be played against a large number of
 	 *   underlying servers.  In this case, there's a separate operation for
-	 *   each, and callback façade to reassemble them.  It is left up to the
+	 *   each, and callback faÔøΩade to reassemble them.  It is left up to the
 	 *   operation pipeline to perform whatever optimization is required to
 	 *   turn these back into multi-gets.
 	 * </p>

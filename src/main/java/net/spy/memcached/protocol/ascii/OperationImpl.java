@@ -6,12 +6,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import net.spy.memcached.KeyUtil;
-import net.spy.memcached.ops.Operation;
-import net.spy.memcached.ops.OperationCallback;
-import net.spy.memcached.ops.OperationErrorType;
-import net.spy.memcached.ops.OperationState;
-import net.spy.memcached.ops.OperationStatus;
+import net.spy.nio.KeyUtil;
+import net.spy.nio.ops.Operation;
+import net.spy.nio.ops.OperationCallback;
+import net.spy.nio.ops.OperationErrorType;
+import net.spy.nio.ops.OperationState;
+import net.spy.nio.ops.OperationStatus;
 import net.spy.memcached.protocol.BaseOperationImpl;
 
 /**

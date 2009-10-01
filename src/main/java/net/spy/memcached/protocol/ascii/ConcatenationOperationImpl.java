@@ -2,7 +2,7 @@ package net.spy.memcached.protocol.ascii;
 
 import net.spy.memcached.ops.ConcatenationOperation;
 import net.spy.memcached.ops.ConcatenationType;
-import net.spy.memcached.ops.OperationCallback;
+import net.spy.nio.ops.OperationCallback;
 
 /**
  * Operation for ascii concatenations.

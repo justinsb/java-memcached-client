@@ -2,7 +2,7 @@ package net.spy.memcached.protocol.binary;
 
 import java.io.IOException;
 
-import net.spy.memcached.ops.OperationState;
+import net.spy.nio.ops.OperationState;
 import net.spy.memcached.ops.StatsOperation;
 
 public class StatsOperationImpl extends OperationImpl

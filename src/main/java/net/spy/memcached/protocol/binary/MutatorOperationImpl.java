@@ -5,8 +5,8 @@ import java.util.Collections;
 
 import net.spy.memcached.ops.MutatorOperation;
 import net.spy.memcached.ops.Mutator;
-import net.spy.memcached.ops.OperationCallback;
-import net.spy.memcached.ops.OperationStatus;
+import net.spy.nio.ops.OperationCallback;
+import net.spy.nio.ops.OperationStatus;
 
 class MutatorOperationImpl extends OperationImpl implements
 		MutatorOperation {

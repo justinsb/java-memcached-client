@@ -5,8 +5,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-import net.spy.memcached.ops.Operation;
-import net.spy.memcached.ops.OperationQueueFactory;
+import net.spy.nio.ArrayModNodeLocator;
+import net.spy.nio.ConnectionFactory;
+import net.spy.nio.ConnectionObserver;
+import net.spy.nio.FailureMode;
+import net.spy.nio.HashAlgorithm;
+import net.spy.nio.KetamaNodeLocator;
+import net.spy.nio.ServerNode;
+import net.spy.nio.ServerNodeLocator;
+import net.spy.nio.ops.Operation;
+import net.spy.nio.ops.OperationQueueFactory;
 import net.spy.memcached.protocol.ascii.AsciiOperationFactory;
 import net.spy.memcached.protocol.binary.BinaryOperationFactory;
 import net.spy.memcached.transcoders.Transcoder;
@@ -199,7 +207,7 @@ public class ConnectionFactoryBuilder {
 			}
 
 			@Override
-			public NodeLocator createLocator(List<MemcachedNode> nodes) {
+			public ServerNodeLocator createLocator(List<ServerNode> nodes) {
 				switch(locator) {
 					case ARRAY_MOD:
 						return new ArrayModNodeLocator(nodes, getHashAlg());

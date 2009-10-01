@@ -1,4 +1,4 @@
-package net.spy.memcached.ops;
+package net.spy.nio.ops;
 
 /**
  * An operation callback that will capture receivedStatus and complete

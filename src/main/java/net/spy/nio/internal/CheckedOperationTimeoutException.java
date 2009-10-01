@@ -1,11 +1,11 @@
-package net.spy.memcached.internal;
+package net.spy.nio.internal;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.TimeoutException;
 
-import net.spy.memcached.MemcachedNode;
-import net.spy.memcached.ops.Operation;
+import net.spy.nio.ServerNode;
+import net.spy.nio.ops.Operation;
 
 /**
  * Timeout exception that tracks the original operation.
@@ -43,7 +43,7 @@ public class CheckedOperationTimeoutException extends TimeoutException {
 			} else {
 				rv.append(", ");
 			}
-			MemcachedNode node = op == null ? null : op.getHandlingNode();
+			ServerNode node = op == null ? null : op.getHandlingNode();
 			rv.append(node == null ? "<unknown>" : node.getSocketAddress());
 		}
 		return rv.toString();

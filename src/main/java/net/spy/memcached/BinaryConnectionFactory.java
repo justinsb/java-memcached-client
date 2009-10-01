@@ -5,6 +5,7 @@ import java.nio.channels.SocketChannel;
 
 import net.spy.memcached.protocol.binary.BinaryMemcachedNodeImpl;
 import net.spy.memcached.protocol.binary.BinaryOperationFactory;
+import net.spy.nio.HashAlgorithm;
 
 /**
  * Default connection factory for binary wire protocol connections.
@@ -38,7 +39,7 @@ public class BinaryConnectionFactory extends DefaultConnectionFactory {
 	}
 
 	@Override
-	public MemcachedNode createMemcachedNode(SocketAddress sa,
+	public MemcachedNode createServerNode(SocketAddress sa,
 			SocketChannel c, int bufSize) {
 		return new BinaryMemcachedNodeImpl(sa, c, bufSize,
 			createReadOperationQueue(),

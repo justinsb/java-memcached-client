@@ -3,14 +3,14 @@ package net.spy.memcached.protocol;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import net.spy.memcached.MemcachedNode;
 import net.spy.memcached.compat.SpyObject;
 import net.spy.memcached.ops.CancelledOperationStatus;
-import net.spy.memcached.ops.OperationCallback;
-import net.spy.memcached.ops.OperationErrorType;
-import net.spy.memcached.ops.OperationException;
-import net.spy.memcached.ops.OperationState;
-import net.spy.memcached.ops.OperationStatus;
+import net.spy.nio.ServerNode;
+import net.spy.nio.ops.OperationCallback;
+import net.spy.nio.ops.OperationErrorType;
+import net.spy.nio.ops.OperationException;
+import net.spy.nio.ops.OperationState;
+import net.spy.nio.ops.OperationStatus;
 
 /**
  * Base class for protocol-specific operation implementations.
@@ -27,7 +27,7 @@ public abstract class BaseOperationImpl extends SpyObject {
 	private boolean cancelled = false;
 	private OperationException exception = null;
 	protected OperationCallback callback = null;
-	private volatile MemcachedNode handlingNode = null;
+	private volatile ServerNode handlingNode = null;
 
 	public BaseOperationImpl() {
 		super();
@@ -136,11 +136,11 @@ public abstract class BaseOperationImpl extends SpyObject {
 		assert false;
 	}
 
-	public MemcachedNode getHandlingNode() {
+	public ServerNode getHandlingNode() {
 		return handlingNode;
 	}
 
-	public void setHandlingNode(MemcachedNode to) {
+	public void setHandlingNode(ServerNode to) {
 		handlingNode = to;
 	}
 

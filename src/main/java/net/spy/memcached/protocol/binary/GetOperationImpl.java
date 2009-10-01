@@ -5,7 +5,7 @@ import java.util.Collections;
 
 import net.spy.memcached.ops.GetOperation;
 import net.spy.memcached.ops.GetsOperation;
-import net.spy.memcached.ops.OperationStatus;
+import net.spy.nio.ops.OperationStatus;
 
 class GetOperationImpl extends OperationImpl
 	implements GetOperation, GetsOperation {

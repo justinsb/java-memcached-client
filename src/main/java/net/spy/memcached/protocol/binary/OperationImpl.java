@@ -6,12 +6,12 @@ import java.nio.ByteOrder;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import net.spy.memcached.CASResponse;
-import net.spy.memcached.KeyUtil;
+import net.spy.nio.KeyUtil;
 import net.spy.memcached.ops.CASOperationStatus;
-import net.spy.memcached.ops.OperationCallback;
-import net.spy.memcached.ops.OperationErrorType;
-import net.spy.memcached.ops.OperationState;
-import net.spy.memcached.ops.OperationStatus;
+import net.spy.nio.ops.OperationCallback;
+import net.spy.nio.ops.OperationErrorType;
+import net.spy.nio.ops.OperationState;
+import net.spy.nio.ops.OperationStatus;
 import net.spy.memcached.protocol.BaseOperationImpl;
 
 /**

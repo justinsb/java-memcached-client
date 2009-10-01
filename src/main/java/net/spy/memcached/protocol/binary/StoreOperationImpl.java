@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.Collections;
 
 import net.spy.memcached.ops.CASOperation;
-import net.spy.memcached.ops.OperationCallback;
-import net.spy.memcached.ops.OperationStatus;
+import net.spy.nio.ops.OperationCallback;
+import net.spy.nio.ops.OperationStatus;
 import net.spy.memcached.ops.StoreOperation;
 import net.spy.memcached.ops.StoreType;
 

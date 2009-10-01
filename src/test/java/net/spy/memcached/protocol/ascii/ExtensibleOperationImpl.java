@@ -1,6 +1,6 @@
 package net.spy.memcached.protocol.ascii;
 
-import net.spy.memcached.ops.OperationCallback;
+import net.spy.nio.ops.OperationCallback;
 
 /**
  * For testing, allow subclassing of the operation impl.

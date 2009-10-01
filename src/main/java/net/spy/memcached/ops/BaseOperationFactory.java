@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import net.spy.memcached.OperationFactory;
+import net.spy.nio.ops.Operation;
+import net.spy.nio.ops.OperationState;
 
 /**
  * Base class for operation factories.

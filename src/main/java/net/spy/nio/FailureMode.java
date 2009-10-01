@@ -1,4 +1,4 @@
-package net.spy.memcached;
+package net.spy.nio;
 
 /**
  * Failure modes for node failures.

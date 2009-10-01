@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import net.spy.memcached.compat.SpyThread;
 import net.spy.memcached.internal.BulkGetFuture;
 import net.spy.memcached.internal.GetFuture;
-import net.spy.memcached.internal.OperationFuture;
+import net.spy.nio.internal.OperationFuture;
 import net.spy.memcached.ops.CASOperationStatus;
 import net.spy.memcached.ops.CancelledOperationStatus;
 import net.spy.memcached.ops.ConcatenationType;
@@ -35,10 +35,18 @@ import net.spy.memcached.ops.DeleteOperation;
 import net.spy.memcached.ops.GetOperation;
 import net.spy.memcached.ops.GetsOperation;
 import net.spy.memcached.ops.Mutator;
-import net.spy.memcached.ops.Operation;
-import net.spy.memcached.ops.OperationCallback;
-import net.spy.memcached.ops.OperationState;
-import net.spy.memcached.ops.OperationStatus;
+import net.spy.nio.BroadcastOpFactory;
+import net.spy.nio.ConnectionFactory;
+import net.spy.nio.ConnectionObserver;
+import net.spy.nio.KeyUtil;
+import net.spy.nio.OperationTimeoutException;
+import net.spy.nio.ServerConnection;
+import net.spy.nio.ServerNode;
+import net.spy.nio.ServerNodeLocator;
+import net.spy.nio.ops.Operation;
+import net.spy.nio.ops.OperationCallback;
+import net.spy.nio.ops.OperationState;
+import net.spy.nio.ops.OperationStatus;
 import net.spy.memcached.ops.StatsOperation;
 import net.spy.memcached.ops.StoreType;
 import net.spy.memcached.transcoders.TranscodeService;
@@ -96,7 +104,7 @@ public final class MemcachedClient extends SpyThread implements MemcachedClientI
 
 	private final long operationTimeout;
 
-	private final MemcachedConnection conn;
+	private final ServerConnection conn;
 	final OperationFactory opFact;
 
 	final Transcoder<Object> transcoder;
@@ -170,7 +178,7 @@ public final class MemcachedClient extends SpyThread implements MemcachedClientI
 	 */
 	public Collection<SocketAddress> getAvailableServers() {
 		Collection<SocketAddress> rv=new ArrayList<SocketAddress>();
-		for(MemcachedNode node : conn.getLocator().getAll()) {
+		for(ServerNode node : conn.getLocator().getAll()) {
 			if(node.isActive()) {
 				rv.add(node.getSocketAddress());
 			}
@@ -189,7 +197,7 @@ public final class MemcachedClient extends SpyThread implements MemcachedClientI
 	 */
 	public Collection<SocketAddress> getUnavailableServers() {
 		Collection<SocketAddress> rv=new ArrayList<SocketAddress>();
-		for(MemcachedNode node : conn.getLocator().getAll()) {
+		for(ServerNode node : conn.getLocator().getAll()) {
 			if(!node.isActive()) {
 				rv.add(node.getSocketAddress());
 			}
@@ -200,7 +208,7 @@ public final class MemcachedClient extends SpyThread implements MemcachedClientI
 	/**
 	 * Get a read-only wrapper around the node locator wrapping this instance.
 	 */
-	public NodeLocator getNodeLocator() {
+	public ServerNodeLocator getNodeLocator() {
 		return conn.getLocator().getReadonlyCopy();
 	}
 
@@ -876,19 +884,19 @@ public final class MemcachedClient extends SpyThread implements MemcachedClientI
 		final Transcoder<T> tc) {
 		final Map<String, Future<T>> m=new ConcurrentHashMap<String, Future<T>>();
 		// Break the gets down into groups by key
-		final Map<MemcachedNode, Collection<String>> chunks
-			=new HashMap<MemcachedNode, Collection<String>>();
-		final NodeLocator locator=conn.getLocator();
+		final Map<ServerNode, Collection<String>> chunks
+			=new HashMap<ServerNode, Collection<String>>();
+		final ServerNodeLocator locator=conn.getLocator();
 		for(String key : keys) {
 			validateKey(key);
-			final MemcachedNode primaryNode=locator.getPrimary(key);
-			MemcachedNode node=null;
+			final ServerNode primaryNode=locator.getPrimary(key);
+			ServerNode node=null;
 			if(primaryNode.isActive()) {
 				node=primaryNode;
 			} else {
-				for(Iterator<MemcachedNode> i=locator.getSequence(key);
+				for(Iterator<ServerNode> i=locator.getSequence(key);
 					node == null && i.hasNext();) {
-					MemcachedNode n=i.next();
+					ServerNode n=i.next();
 					if(n.isActive()) {
 						node=n;
 					}
@@ -901,7 +909,7 @@ public final class MemcachedClient extends SpyThread implements MemcachedClientI
 			Collection<String> ks=chunks.get(node);
 			if(ks == null) {
 				ks=new ArrayList<String>();
-				chunks.put(node, ks);
+				chunks.put((MemcachedNode) node, ks);
 			}
 			ks.add(key);
 		}
@@ -927,10 +935,10 @@ public final class MemcachedClient extends SpyThread implements MemcachedClientI
 
 		// Now that we know how many servers it breaks down into, and the latch
 		// is all set up, convert all of these strings collections to operations
-		final Map<MemcachedNode, Operation> mops=
-			new HashMap<MemcachedNode, Operation>();
+		final Map<ServerNode, Operation> mops=
+			new HashMap<ServerNode, Operation>();
 
-		for(Map.Entry<MemcachedNode, Collection<String>> me
+		for(Map.Entry<ServerNode, Collection<String>> me
 				: chunks.entrySet()) {
 			Operation op=opFact.get(me.getValue(), cb);
 			mops.put(me.getKey(), op);
@@ -1060,7 +1068,7 @@ public final class MemcachedClient extends SpyThread implements MemcachedClientI
 			new ConcurrentHashMap<SocketAddress, String>();
 
 		CountDownLatch blatch = broadcastOp(new BroadcastOpFactory(){
-			public Operation newOp(final MemcachedNode n,
+			public Operation newOp(final ServerNode n,
 					final CountDownLatch latch) {
 				final SocketAddress sa=n.getSocketAddress();
 				return opFact.version(
@@ -1104,7 +1112,7 @@ public final class MemcachedClient extends SpyThread implements MemcachedClientI
 			=new HashMap<SocketAddress, Map<String, String>>();
 
 		CountDownLatch blatch = broadcastOp(new BroadcastOpFactory(){
-			public Operation newOp(final MemcachedNode n,
+			public Operation newOp(final ServerNode n,
 				final CountDownLatch latch) {
 				final SocketAddress sa=n.getSocketAddress();
 				rv.put(sa, new HashMap<String, String>());
@@ -1382,7 +1390,7 @@ public final class MemcachedClient extends SpyThread implements MemcachedClientI
 		final ConcurrentLinkedQueue<Operation> ops=
 			new ConcurrentLinkedQueue<Operation>();
 		CountDownLatch blatch = broadcastOp(new BroadcastOpFactory(){
-			public Operation newOp(final MemcachedNode n,
+			public Operation newOp(final ServerNode n,
 					final CountDownLatch latch) {
 				Operation op=opFact.flush(delay, new OperationCallback(){
 					public void receivedStatus(OperationStatus s) {
@@ -1513,7 +1521,7 @@ public final class MemcachedClient extends SpyThread implements MemcachedClientI
 	 */
 	public boolean waitForQueues(long timeout, TimeUnit unit) {
 		CountDownLatch blatch = broadcastOp(new BroadcastOpFactory(){
-			public Operation newOp(final MemcachedNode n,
+			public Operation newOp(final ServerNode n,
 					final CountDownLatch latch) {
 				return opFact.noop(
 						new OperationCallback() {

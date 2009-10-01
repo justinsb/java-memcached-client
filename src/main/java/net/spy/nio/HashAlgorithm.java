@@ -1,4 +1,4 @@
-package net.spy.memcached;
+package net.spy.nio;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

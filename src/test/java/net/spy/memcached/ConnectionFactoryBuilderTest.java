@@ -11,7 +11,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import net.spy.memcached.ConnectionFactoryBuilder.Locator;
 import net.spy.memcached.ConnectionFactoryBuilder.Protocol;
 import net.spy.memcached.compat.BaseMockCase;
-import net.spy.memcached.ops.Operation;
+import net.spy.nio.ops.Operation;
 import net.spy.memcached.ops.OperationQueueFactory;
 import net.spy.memcached.protocol.ascii.AsciiMemcachedNodeImpl;
 import net.spy.memcached.protocol.ascii.AsciiOperationFactory;

@@ -4,7 +4,7 @@
 package net.spy.memcached.protocol;
 
 import net.spy.memcached.ops.GetOperation;
-import net.spy.memcached.ops.OperationStatus;
+import net.spy.nio.ops.OperationStatus;
 
 /**
  * Wrapper callback for use in optimized gets.

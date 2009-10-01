@@ -6,7 +6,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import net.spy.memcached.ops.Operation;
+import net.spy.nio.internal.OperationFuture;
+import net.spy.nio.ops.Operation;
 
 /**
  * Future returned for GET operations.

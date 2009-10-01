@@ -1,6 +1,7 @@
 package net.spy.memcached.ops;
 
 import net.spy.memcached.CASResponse;
+import net.spy.nio.ops.OperationStatus;
 
 /**
  * OperationStatus subclass for indicating CAS status.

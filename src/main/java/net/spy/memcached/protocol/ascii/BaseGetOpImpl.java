@@ -3,12 +3,12 @@ package net.spy.memcached.protocol.ascii;
 import java.nio.ByteBuffer;
 import java.util.Collection;
 
-import net.spy.memcached.KeyUtil;
+import net.spy.nio.KeyUtil;
 import net.spy.memcached.ops.GetOperation;
 import net.spy.memcached.ops.GetsOperation;
-import net.spy.memcached.ops.OperationCallback;
-import net.spy.memcached.ops.OperationState;
-import net.spy.memcached.ops.OperationStatus;
+import net.spy.nio.ops.OperationCallback;
+import net.spy.nio.ops.OperationState;
+import net.spy.nio.ops.OperationStatus;
 
 /**
  * Base class for get and gets handlers.

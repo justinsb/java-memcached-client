@@ -5,8 +5,8 @@ import java.util.Collections;
 
 import net.spy.memcached.ops.ConcatenationOperation;
 import net.spy.memcached.ops.ConcatenationType;
-import net.spy.memcached.ops.OperationCallback;
-import net.spy.memcached.ops.OperationStatus;
+import net.spy.nio.ops.OperationCallback;
+import net.spy.nio.ops.OperationStatus;
 
 class ConcatenationOperationImpl extends OperationImpl
 	implements ConcatenationOperation {

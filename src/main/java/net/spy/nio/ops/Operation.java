@@ -1,9 +1,9 @@
-package net.spy.memcached.ops;
+package net.spy.nio.ops;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import net.spy.memcached.MemcachedNode;
+import net.spy.nio.ServerNode;
 
 
 /**
@@ -72,12 +72,12 @@ public interface Operation {
 	/**
 	 * Get the node that should've been handling this operation.
 	 */
-	MemcachedNode getHandlingNode();
+	ServerNode getHandlingNode();
 
 	/**
 	 * Set a reference to the node that will be/is handling this operation.
 	 *
 	 * @param to a memcached node
 	 */
-	void setHandlingNode(MemcachedNode to);
+	void setHandlingNode(ServerNode to);
 }

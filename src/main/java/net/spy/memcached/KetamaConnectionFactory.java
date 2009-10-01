@@ -2,6 +2,11 @@ package net.spy.memcached;
 
 import java.util.List;
 
+import net.spy.nio.HashAlgorithm;
+import net.spy.nio.KetamaNodeLocator;
+import net.spy.nio.ServerNode;
+import net.spy.nio.ServerNodeLocator;
+
 /**
  * ConnectionFactory instance that sets up a ketama compatible connection.
  *
@@ -36,7 +41,7 @@ public class KetamaConnectionFactory extends DefaultConnectionFactory {
 	 * @see net.spy.memcached.ConnectionFactory#createLocator(java.util.List)
 	 */
 	@Override
-	public NodeLocator createLocator(List<MemcachedNode> nodes) {
+	public ServerNodeLocator createLocator(List<ServerNode> nodes) {
 		return new KetamaNodeLocator(nodes, getHashAlg());
 	}
 }

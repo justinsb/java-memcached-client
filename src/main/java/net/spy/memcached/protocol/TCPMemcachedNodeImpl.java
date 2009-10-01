@@ -11,8 +11,8 @@ import java.util.concurrent.BlockingQueue;
 
 import net.spy.memcached.MemcachedNode;
 import net.spy.memcached.compat.SpyObject;
-import net.spy.memcached.ops.Operation;
-import net.spy.memcached.ops.OperationState;
+import net.spy.nio.ops.Operation;
+import net.spy.nio.ops.OperationState;
 
 /**
  * Represents a node with the memcached cluster, along with buffering and

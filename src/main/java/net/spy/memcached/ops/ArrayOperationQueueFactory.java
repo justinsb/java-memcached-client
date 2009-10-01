@@ -3,6 +3,9 @@ package net.spy.memcached.ops;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+import net.spy.nio.ops.Operation;
+import net.spy.nio.ops.OperationQueueFactory;
+
 /**
  * OperationQueueFactory that uses an ArrayBlockingQueue.
  */

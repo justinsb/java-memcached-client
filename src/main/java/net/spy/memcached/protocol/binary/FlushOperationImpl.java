@@ -1,7 +1,7 @@
 package net.spy.memcached.protocol.binary;
 
 import net.spy.memcached.ops.FlushOperation;
-import net.spy.memcached.ops.OperationCallback;
+import net.spy.nio.ops.OperationCallback;
 
 class FlushOperationImpl extends OperationImpl implements FlushOperation {
 
