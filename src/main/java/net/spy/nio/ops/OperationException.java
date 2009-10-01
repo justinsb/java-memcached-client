@@ -7,6 +7,7 @@ import java.io.IOException;
  * Exceptions thrown when protocol errors occur.
  */
 public final class OperationException extends IOException {
+	private static final long serialVersionUID = 1L;
 
 	private final OperationErrorType type;
 

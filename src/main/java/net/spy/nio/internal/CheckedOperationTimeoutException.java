@@ -11,6 +11,7 @@ import net.spy.nio.ops.Operation;
  * Timeout exception that tracks the original operation.
  */
 public class CheckedOperationTimeoutException extends TimeoutException {
+	private static final long serialVersionUID = 1L;
 
 	private final Collection<Operation> operations;
 

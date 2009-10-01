@@ -7,8 +7,9 @@ package net.spy.nio;
  * @see net.spy.memcached.MemcachedClient#setGlobalOperationTimeout(long)
  */
 public class OperationTimeoutException extends RuntimeException {
+	private static final long serialVersionUID = 1L;
 
-    public OperationTimeoutException(String message) {
+	public OperationTimeoutException(String message) {
         super(message);
     }
 
