@@ -17,7 +17,7 @@ import net.spy.memcached.compat.SyncThread;
 import net.spy.memcached.ops.OperationErrorType;
 import net.spy.memcached.ops.OperationException;
 import net.spy.memcached.transcoders.SerializingTranscoder;
-import net.spy.memcached.transcoders.Transcoder;
+import net.spy.nio.transcoders.Transcoder;
 
 
 public abstract class ProtocolBaseCase extends ClientBaseCase {

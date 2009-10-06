@@ -1,4 +1,4 @@
-package net.spy.memcached;
+package net.spy.nio;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -37,7 +37,7 @@ import net.spy.memcached.transcoders.Transcoder;
  * by default.
  * </p>
  */
-public class DefaultConnectionFactory extends SpyObject
+public abstract class DefaultConnectionFactory extends SpyObject
 	implements ConnectionFactory {
 
 	/**
@@ -100,34 +100,6 @@ public class DefaultConnectionFactory extends SpyObject
 		this(DEFAULT_OP_QUEUE_LEN, DEFAULT_READ_BUFFER_SIZE);
 	}
 
-	public MemcachedNode createServerNode(SocketAddress sa,
-			SocketChannel c, int bufSize) {
-
-		OperationFactory of = getOperationFactory();
-		if(of instanceof AsciiOperationFactory) {
-			return new AsciiMemcachedNodeImpl(sa, c, bufSize,
-				createReadOperationQueue(),
-				createWriteOperationQueue(),
-				createOperationQueue());
-		} else if(of instanceof BinaryOperationFactory) {
-			return new BinaryMemcachedNodeImpl(sa, c, bufSize,
-					createReadOperationQueue(),
-					createWriteOperationQueue(),
-					createOperationQueue());
-		} else {
-			throw new IllegalStateException(
-				"Unhandled operation factory type " + of);
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see net.spy.memcached.ConnectionFactory#createConnection(java.util.List)
-	 */
-	public MemcachedConnection createConnection(List<InetSocketAddress> addrs)
-		throws IOException {
-		return new MemcachedConnection(getReadBufSize(), this, addrs,
-			getInitialObservers(), getFailureMode(), getOperationFactory());
-	}
 
 	/* (non-Javadoc)
 	 * @see net.spy.memcached.ConnectionFactory#getFailureMode()
@@ -161,6 +133,9 @@ public class DefaultConnectionFactory extends SpyObject
 	 * @see net.spy.memcached.ConnectionFactory#createLocator(java.util.List)
 	 */
 	public ServerNodeLocator createLocator(List<ServerNode> nodes) {
+		if (nodes.size() == 1)
+			return new SingletonNodeLocator(nodes.get(0));
+
 		return new ArrayModNodeLocator(nodes, getHashAlg());
 	}
 
@@ -183,13 +158,6 @@ public class DefaultConnectionFactory extends SpyObject
 	 */
 	public HashAlgorithm getHashAlg() {
 		return hashAlg;
-	}
-
-	/* (non-Javadoc)
-	 * @see net.spy.memcached.ConnectionFactory#getOperationFactory()
-	 */
-	public OperationFactory getOperationFactory() {
-		return new AsciiOperationFactory();
 	}
 
 	/* (non-Javadoc)

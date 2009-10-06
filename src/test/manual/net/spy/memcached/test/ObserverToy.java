@@ -6,8 +6,9 @@ import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 import net.spy.memcached.AddrUtil;
+import net.spy.memcached.DefaultMemcachedConnectionFactory;
 import net.spy.nio.ConnectionObserver;
-import net.spy.memcached.DefaultConnectionFactory;
+import net.spy.nio.DefaultConnectionFactory;
 import net.spy.memcached.MemcachedClient;
 
 /**
@@ -30,7 +31,7 @@ public class ObserverToy {
 		};
 
 		MemcachedClient c = new MemcachedClient(
-			new DefaultConnectionFactory() {
+			new DefaultMemcachedConnectionFactory() {
 
 				@Override
 				public Collection<ConnectionObserver> getInitialObservers() {

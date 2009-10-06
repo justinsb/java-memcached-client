@@ -4,6 +4,7 @@ import java.net.SocketAddress;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.BlockingQueue;
 
+import net.spy.memcached.MemcachedNode;
 import net.spy.memcached.ops.GetOperation;
 import net.spy.nio.ops.Operation;
 import net.spy.nio.ops.OperationState;
@@ -13,7 +14,7 @@ import net.spy.memcached.protocol.TCPMemcachedNodeImpl;
 /**
  * Memcached node for the ASCII protocol.
  */
-public final class AsciiMemcachedNodeImpl extends TCPMemcachedNodeImpl {
+public final class AsciiMemcachedNodeImpl extends TCPMemcachedNodeImpl  {
 
 	public AsciiMemcachedNodeImpl(SocketAddress sa, SocketChannel c,
 			int bufSize, BlockingQueue<Operation> rq,

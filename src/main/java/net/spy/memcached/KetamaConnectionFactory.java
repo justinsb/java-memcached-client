@@ -2,6 +2,7 @@ package net.spy.memcached;
 
 import java.util.List;
 
+import net.spy.nio.DefaultConnectionFactory;
 import net.spy.nio.HashAlgorithm;
 import net.spy.nio.KetamaNodeLocator;
 import net.spy.nio.ServerNode;
@@ -21,7 +22,7 @@ import net.spy.nio.ServerNodeLocator;
  *
  * </p>
  */
-public class KetamaConnectionFactory extends DefaultConnectionFactory {
+public class KetamaConnectionFactory extends DefaultMemcachedConnectionFactory {
 	/**
 	 * Create a KetamaConnectionFactory with the given maximum operation
 	 * queue length, and the given read buffer size.

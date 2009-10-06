@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 import net.spy.nio.ops.Operation;
-import net.spy.memcached.OperationFactory;
-import net.spy.memcached.transcoders.Transcoder;
 
 /**
  * Factory for creating instances of MemcachedConnection.
@@ -57,12 +55,6 @@ public interface ConnectionFactory {
 	ServerNodeLocator createLocator(List<ServerNode> nodes);
 
 	/**
-	 * Get the operation factory for connections built by this connection
-	 * factory.
-	 */
-	OperationFactory getOperationFactory();
-
-	/**
 	 * Get the operation timeout used by this connection.
 	 */
 	long getOperationTimeout();
@@ -93,12 +85,6 @@ public interface ConnectionFactory {
 	 * Get the default failure mode for the underlying connection.
 	 */
 	FailureMode getFailureMode();
-
-	/**
-	 * Get the default transcoder to be used in connections created by this
-	 * factory.
-	 */
-	Transcoder<Object> getDefaultTranscoder();
 
 	/**
 	 * If true, low-level optimization is in effect.

@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import junit.framework.TestCase;
 import net.spy.memcached.AddrUtil;
-import net.spy.memcached.DefaultConnectionFactory;
+import net.spy.memcached.DefaultMemcachedConnectionFactory;
 import net.spy.memcached.MemcachedClient;
 
 /**
@@ -43,7 +43,7 @@ public class MemcachedThreadBench extends TestCase {
 		int threads = Integer.parseInt(args[3]);
 
 		MemcachedClient client=new MemcachedClient(
-			new DefaultConnectionFactory(100000, 32768),
+			new DefaultMemcachedConnectionFactory(100000, 32768),
 			AddrUtil.getAddresses(serverlist));
 
 		WorkerStat[] statArray = new WorkerStat[threads];

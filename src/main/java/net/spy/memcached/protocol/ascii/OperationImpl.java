@@ -12,7 +12,7 @@ import net.spy.nio.ops.OperationCallback;
 import net.spy.nio.ops.OperationErrorType;
 import net.spy.nio.ops.OperationState;
 import net.spy.nio.ops.OperationStatus;
-import net.spy.memcached.protocol.BaseOperationImpl;
+import net.spy.nio.protocol.BaseOperationImpl;
 
 /**
  * Operations on a memcached connection.

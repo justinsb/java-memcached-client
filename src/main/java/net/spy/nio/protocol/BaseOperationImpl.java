@@ -1,4 +1,4 @@
-package net.spy.memcached.protocol;
+package net.spy.nio.protocol;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

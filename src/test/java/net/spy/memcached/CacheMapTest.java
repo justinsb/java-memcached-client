@@ -6,7 +6,7 @@ import java.util.Map;
 
 import net.spy.memcached.transcoders.IntegerTranscoder;
 import net.spy.memcached.transcoders.SerializingTranscoder;
-import net.spy.memcached.transcoders.Transcoder;
+import net.spy.nio.transcoders.Transcoder;
 
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;

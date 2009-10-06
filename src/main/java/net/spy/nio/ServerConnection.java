@@ -25,16 +25,14 @@ import java.util.TreeMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 
-import net.spy.memcached.OperationFactory;
 import net.spy.memcached.compat.SpyObject;
-import net.spy.memcached.ops.KeyedOperation;
 import net.spy.nio.ops.Operation;
 import net.spy.nio.ops.OperationState;
 
 /**
  * Connection to a cluster of memcached servers.
  */
-public class ServerConnection extends SpyObject {
+public abstract class ServerConnection extends SpyObject {
 
 	// The number of empty selects we'll allow before assuming we may have
 	// missed one and should check the current selectors.  This generally
@@ -63,8 +61,7 @@ public class ServerConnection extends SpyObject {
 
 	private final Collection<ConnectionObserver> connObservers =
 		new ConcurrentLinkedQueue<ConnectionObserver>();
-	private final OperationFactory opFact;
-
+	
 	/**
 	 * Construct a memcached connection.
 	 *
@@ -76,14 +73,13 @@ public class ServerConnection extends SpyObject {
 	 */
 	public ServerConnection(int bufSize, ConnectionFactory f,
 			List<InetSocketAddress> a, Collection<ConnectionObserver> obs,
-			FailureMode fm, OperationFactory opfactory)
+			FailureMode fm)
 		throws IOException {
 		connObservers.addAll(obs);
 		reconnectQueue=new TreeMap<Long, ServerNode>();
 		addedQueue=new ConcurrentLinkedQueue<ServerNode>();
 		failureMode = fm;
 		shouldOptimize = f.shouldOptimize();
-		opFact = opfactory;
 		selector=Selector.open();
 		List<ServerNode> connections=new ArrayList<ServerNode>(a.size());
 		for(SocketAddress sa : a) {
@@ -434,32 +430,15 @@ public class ServerConnection extends SpyObject {
 		}
 	}
 
+	protected abstract void redistributeOperations(Collection<Operation> ops);
+
 	private void cancelOperations(Collection<Operation> ops) {
 		for(Operation op : ops) {
 			op.cancel();
 		}
 	}
 
-	private void redistributeOperations(Collection<Operation> ops) {
-		for(Operation op : ops) {
-			if(op instanceof KeyedOperation) {
-				KeyedOperation ko = (KeyedOperation)op;
-				int added = 0;
-				for(String k : ko.getKeys()) {
-					for(Operation newop : opFact.clone(ko)) {
-						addOperation(k, newop);
-						added++;
-					}
-				}
-				assert added > 0
-					: "Didn't add any new operations when redistributing";
-			} else {
-				// Cancel things that don't have definite targets.
-				op.cancel();
-			}
-		}
-	}
-
+	
 	private void attemptReconnects() throws IOException {
 		final long now=System.currentTimeMillis();
 		final Map<ServerNode, Boolean> seen=

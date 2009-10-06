@@ -10,7 +10,7 @@ import net.spy.nio.HashAlgorithm;
 /**
  * Default connection factory for binary wire protocol connections.
  */
-public class BinaryConnectionFactory extends DefaultConnectionFactory {
+public class BinaryConnectionFactory extends DefaultMemcachedConnectionFactory {
 
 	/**
 	 * Create a DefaultConnectionFactory with the default parameters.

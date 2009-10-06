@@ -8,11 +8,13 @@ import java.util.concurrent.BlockingQueue;
 import net.spy.nio.ArrayModNodeLocator;
 import net.spy.nio.ConnectionFactory;
 import net.spy.nio.ConnectionObserver;
+import net.spy.nio.DefaultConnectionFactory;
 import net.spy.nio.FailureMode;
 import net.spy.nio.HashAlgorithm;
 import net.spy.nio.KetamaNodeLocator;
 import net.spy.nio.ServerNode;
 import net.spy.nio.ServerNodeLocator;
+import net.spy.nio.SingletonNodeLocator;
 import net.spy.nio.ops.Operation;
 import net.spy.nio.ops.OperationQueueFactory;
 import net.spy.memcached.protocol.ascii.AsciiOperationFactory;
@@ -184,7 +186,7 @@ public class ConnectionFactoryBuilder {
 	 * Get the ConnectionFactory set up with the provided parameters.
 	 */
 	public ConnectionFactory build() {
-		return new DefaultConnectionFactory() {
+		return new DefaultMemcachedConnectionFactory() {
 
 			@Override
 			public BlockingQueue<Operation> createOperationQueue() {

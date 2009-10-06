@@ -38,7 +38,9 @@ import net.spy.memcached.ops.Mutator;
 import net.spy.nio.BroadcastOpFactory;
 import net.spy.nio.ConnectionFactory;
 import net.spy.nio.ConnectionObserver;
+import net.spy.nio.DefaultConnectionFactory;
 import net.spy.nio.KeyUtil;
+import net.spy.nio.NioClientBase;
 import net.spy.nio.OperationTimeoutException;
 import net.spy.nio.ServerConnection;
 import net.spy.nio.ServerNode;
@@ -97,14 +99,8 @@ import net.spy.memcached.transcoders.Transcoder;
  *	}
  * </pre>
  */
-public final class MemcachedClient extends SpyThread implements MemcachedClientIF {
+public final class MemcachedClient extends NioClientBase implements MemcachedClientIF {
 
-	private volatile boolean running=true;
-	private volatile boolean shuttingDown=false;
-
-	private final long operationTimeout;
-
-	private final ServerConnection conn;
 	final OperationFactory opFact;
 
 	final Transcoder<Object> transcoder;
@@ -118,7 +114,7 @@ public final class MemcachedClient extends SpyThread implements MemcachedClientI
 	 * @throws IOException if connections cannot be established
 	 */
 	public MemcachedClient(InetSocketAddress... ia) throws IOException {
-		this(new DefaultConnectionFactory(), Arrays.asList(ia));
+		this(new DefaultMemcachedConnectionFactory(), Arrays.asList(ia));
 	}
 
 	/**
@@ -129,7 +125,7 @@ public final class MemcachedClient extends SpyThread implements MemcachedClientI
 	 */
 	public MemcachedClient(List<InetSocketAddress> addrs)
 		throws IOException {
-		this(new DefaultConnectionFactory(), addrs);
+		this(new DefaultMemcachedConnectionFactory(), addrs);
 	}
 
 	/**
@@ -139,79 +135,20 @@ public final class MemcachedClient extends SpyThread implements MemcachedClientI
 	 * @param addrs the socket addresses
 	 * @throws IOException if connections cannot be established
 	 */
-	public MemcachedClient(ConnectionFactory cf, List<InetSocketAddress> addrs)
+	public MemcachedClient(MemcachedConnectionFactory cf, List<InetSocketAddress> addrs)
 		throws IOException {
-		if(cf == null) {
-			throw new NullPointerException("Connection factory required");
-		}
-		if(addrs == null) {
-			throw new NullPointerException("Server list required");
-		}
-		if(addrs.isEmpty()) {
-			throw new IllegalArgumentException(
-				"You must have at least one server to connect to");
-		}
-		if(cf.getOperationTimeout() <= 0) {
-			throw new IllegalArgumentException(
-				"Operation timeout must be positive.");
-		}
+		super(cf, addrs);
 		tcService = new TranscodeService();
 		transcoder=cf.getDefaultTranscoder();
 		opFact=cf.getOperationFactory();
 		assert opFact != null : "Connection factory failed to make op factory";
-		conn=cf.createConnection(addrs);
-		assert conn != null : "Connection factory failed to make a connection";
-		operationTimeout = cf.getOperationTimeout();
-		setName("Memcached IO over " + conn);
-		setDaemon(cf.isDaemon());
 		start();
 	}
 
-	/**
-	 * Get the addresses of available servers.
-	 *
-	 * <p>
-	 * This is based on a snapshot in time so shouldn't be considered
-	 * completely accurate, but is a useful for getting a feel for what's
-	 * working and what's not working.
-	 * </p>
-	 */
-	public Collection<SocketAddress> getAvailableServers() {
-		Collection<SocketAddress> rv=new ArrayList<SocketAddress>();
-		for(ServerNode node : conn.getLocator().getAll()) {
-			if(node.isActive()) {
-				rv.add(node.getSocketAddress());
-			}
-		}
-		return rv;
-	}
+	
 
-	/**
-	 * Get the addresses of unavailable servers.
-	 *
-	 * <p>
-	 * This is based on a snapshot in time so shouldn't be considered
-	 * completely accurate, but is a useful for getting a feel for what's
-	 * working and what's not working.
-	 * </p>
-	 */
-	public Collection<SocketAddress> getUnavailableServers() {
-		Collection<SocketAddress> rv=new ArrayList<SocketAddress>();
-		for(ServerNode node : conn.getLocator().getAll()) {
-			if(!node.isActive()) {
-				rv.add(node.getSocketAddress());
-			}
-		}
-		return rv;
-	}
-
-	/**
-	 * Get a read-only wrapper around the node locator wrapping this instance.
-	 */
-	public ServerNodeLocator getNodeLocator() {
-		return conn.getLocator().getReadonlyCopy();
-	}
-
+	
+	
 	/**
 	 * Get the default transcoder that's in use.
 	 */
@@ -219,7 +156,8 @@ public final class MemcachedClient extends SpyThread implements MemcachedClientI
 		return transcoder;
 	}
 
-	private void validateKey(String key) {
+	@Override
+	protected void validateKey(String key) {
 		byte[] keyBytes=KeyUtil.getKeyBytes(key);
 		if(keyBytes.length > MAX_KEY_LENGTH) {
 			throw new IllegalArgumentException("Key is too long (maxlen = "
@@ -238,40 +176,10 @@ public final class MemcachedClient extends SpyThread implements MemcachedClientI
 		}
 	}
 
-	private void checkState() {
-		if(shuttingDown) {
-			throw new IllegalStateException("Shutting down");
-		}
-		assert isAlive() : "IO Thread is not running.";
-	}
 
-	/**
-	 * (internal use) Add a raw operation to a numbered connection.
-	 * This method is exposed for testing.
-	 *
-	 * @param which server number
-	 * @param op the operation to perform
-	 * @return the Operation
-	 */
-	Operation addOp(final String key, final Operation op) {
-		validateKey(key);
-		checkState();
-		conn.addOperation(key, op);
-		return op;
-	}
+	
 
-	CountDownLatch broadcastOp(final BroadcastOpFactory of) {
-		return broadcastOp(of, true);
-	}
-
-	private CountDownLatch broadcastOp(BroadcastOpFactory of,
-			boolean checkShuttingDown) {
-		if(checkShuttingDown && shuttingDown) {
-			throw new IllegalStateException("Shutting down");
-		}
-		return conn.broadcastOperation(of);
-	}
-
+	
 	private <T> Future<Boolean> asyncStore(StoreType storeType, String key,
 						   int exp, T value, Transcoder<T> tc) {
 		CachedData co=tc.encode(value);
@@ -946,9 +854,10 @@ public final class MemcachedClient extends SpyThread implements MemcachedClientI
 		}
 		assert mops.size() == chunks.size();
 		checkState();
-		conn.addOperations(mops);
+		addOperations(mops);
 		return new BulkGetFuture<T>(m, ops, latch);
 	}
+
 
 	/**
 	 * Asynchronously get a bunch of objects from the cache and decode them
@@ -1441,76 +1350,9 @@ public final class MemcachedClient extends SpyThread implements MemcachedClientI
 		return flush(-1);
 	}
 
-	private void logRunException(Exception e) {
-		if(shuttingDown) {
-			// There are a couple types of errors that occur during the
-			// shutdown sequence that are considered OK.  Log at debug.
-			getLogger().debug("Exception occurred during shutdown", e);
-		} else {
-			getLogger().warn("Problem handling memcached IO", e);
-		}
-	}
-
-	/**
-	 * Infinitely loop processing IO.
-	 */
 	@Override
-	public void run() {
-		while(running) {
-			try {
-				conn.handleIO();
-			} catch(IOException e) {
-				logRunException(e);
-			} catch(CancelledKeyException e) {
-				logRunException(e);
-			} catch(ClosedSelectorException e) {
-				logRunException(e);
-			} catch(IllegalStateException e) {
-				logRunException(e);
-			}
-		}
-		getLogger().info("Shut down memcached client");
-	}
-
-	/**
-	 * Shut down immediately.
-	 */
-	public void shutdown() {
-		shutdown(-1, TimeUnit.MILLISECONDS);
-	}
-
-	/**
-	 * Shut down this client gracefully.
-	 */
-	public boolean shutdown(long timeout, TimeUnit unit) {
-		// Guard against double shutdowns (bug 8).
-		if(shuttingDown) {
-			getLogger().info("Suppressing duplicate attempt to shut down");
-			return false;
-		}
-		shuttingDown=true;
-		String baseName=getName();
-		setName(baseName + " - SHUTTING DOWN");
-		boolean rv=false;
-		try {
-			// Conditionally wait
-			if(timeout > 0) {
-				setName(baseName + " - SHUTTING DOWN (waiting)");
-				rv=waitForQueues(timeout, unit);
-			}
-		} finally {
-			// But always begin the shutdown sequence
-			try {
-				setName(baseName + " - SHUTTING DOWN (telling client)");
-				running=false;
-				conn.shutdown();
-				setName(baseName + " - SHUTTING DOWN (informed client)");
-				tcService.shutdown();
-			} catch (IOException e) {
-				getLogger().warn("exception while shutting down", e);
-			}
-		}
-		return rv;
+	protected void shutdownLocalState() {
+		tcService.shutdown();
 	}
 
 	/**
@@ -1541,23 +1383,5 @@ public final class MemcachedClient extends SpyThread implements MemcachedClientI
 		} catch (InterruptedException e) {
 			throw new RuntimeException("Interrupted waiting for queues", e);
 		}
-	}
-
-	/**
-	 * Add a connection observer.
-	 *
-	 * @return true if the observer was added.
-	 */
-	public boolean addObserver(ConnectionObserver obs) {
-		return conn.addObserver(obs);
-	}
-
-	/**
-	 * Remove a connection observer.
-	 *
-	 * @return true if the observer existed, but no longer does
-	 */
-	public boolean removeObserver(ConnectionObserver obs) {
-		return conn.removeObserver(obs);
 	}
 }
