@@ -8,8 +8,9 @@ import java.util.Collection;
 
 import junit.framework.TestCase;
 import net.spy.memcached.MockMemcachedNode;
+import net.spy.nio.internal.CheckedOperationTimeoutException;
 import net.spy.nio.ops.Operation;
-import net.spy.memcached.protocol.BaseOperationImpl;
+import net.spy.nio.protocol.BaseOperationImpl;
 
 public class CheckedOperationTimeoutExceptionTest extends TestCase {
 

@@ -6,7 +6,7 @@ package net.spy.memcached;
 public class AsciiIPV6ClientTest extends AsciiClientTest {
 
 	@Override
-	protected void initClient(ConnectionFactory cf) throws Exception {
+	protected void initClient(MemcachedConnectionFactory cf) throws Exception {
 		client=new MemcachedClient(cf,
 			AddrUtil.getAddresses("::1:11211"));
 	}

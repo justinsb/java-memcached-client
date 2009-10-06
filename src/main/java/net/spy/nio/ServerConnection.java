@@ -371,7 +371,7 @@ public abstract class ServerConnection extends SpyObject {
 	}
 
 	// Make a debug string out of the given buffer's values
-	static String dbgBuffer(ByteBuffer b, int size) {
+	public static String dbgBuffer(ByteBuffer b, int size) {
 		StringBuilder sb=new StringBuilder();
 		byte[] bytes=b.array();
 		for(int i=0; i<size; i++) {

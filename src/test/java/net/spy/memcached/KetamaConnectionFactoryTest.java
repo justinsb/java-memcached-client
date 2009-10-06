@@ -2,6 +2,11 @@ package net.spy.memcached;
 
 import java.util.ArrayList;
 
+import net.spy.nio.ConnectionFactory;
+import net.spy.nio.HashAlgorithm;
+import net.spy.nio.KetamaNodeLocator;
+import net.spy.nio.ServerNodeLocator;
+
 import junit.framework.TestCase;
 
 /**
@@ -17,7 +22,7 @@ public class KetamaConnectionFactoryTest extends TestCase {
 	public void testCorrectTypes() {
 		ConnectionFactory factory = new KetamaConnectionFactory();
 
-		NodeLocator locator = factory.createLocator(new ArrayList<MemcachedNode>());
+		ServerNodeLocator locator = factory.createLocator(new ArrayList<MemcachedNode>());
 		assertTrue(locator instanceof KetamaNodeLocator);
 
 		assertEquals(HashAlgorithm.KETAMA_HASH, factory.getHashAlg());

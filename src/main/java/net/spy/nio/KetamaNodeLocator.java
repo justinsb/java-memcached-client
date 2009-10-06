@@ -26,11 +26,11 @@ public final class KetamaNodeLocator extends SpyObject implements ServerNodeLoca
 	static final int NUM_REPS = 160;
 
 	final SortedMap<Long, ServerNode> ketamaNodes;
-	final Collection<ServerNode> allNodes;
+	final Collection<? extends ServerNode> allNodes;
 
 	final HashAlgorithm hashAlg;
 
-	public KetamaNodeLocator(List<ServerNode> nodes, HashAlgorithm alg) {
+	public KetamaNodeLocator(List<? extends ServerNode> nodes, HashAlgorithm alg) {
 		super();
 		allNodes = nodes;
 		hashAlg = alg;
@@ -69,7 +69,7 @@ public final class KetamaNodeLocator extends SpyObject implements ServerNodeLoca
 		hashAlg=alg;
 	}
 
-	public Collection<ServerNode> getAll() {
+	public Collection<? extends ServerNode> getAll() {
 		return allNodes;
 	}
 

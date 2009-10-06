@@ -27,7 +27,7 @@ public class QueueOverflowTest extends ClientBaseCase {
 		// We're creating artificially constrained queues with the explicit
 		// goal of overrunning them to verify the client will still be
 		// functional after such conditions occur.
-		initClient(new DefaultConnectionFactory(5, 1024) {
+		initClient(new DefaultMemcachedConnectionFactory(5, 1024) {
 			@Override
 			public MemcachedConnection createConnection(
 					List<InetSocketAddress> addrs) throws IOException {

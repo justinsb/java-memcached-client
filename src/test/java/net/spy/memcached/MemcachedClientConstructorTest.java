@@ -8,6 +8,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import net.spy.nio.ArrayModNodeLocator;
+import net.spy.nio.KetamaNodeLocator;
+import net.spy.nio.ServerNodeROImpl;
+
 import junit.framework.TestCase;
 
 /**
@@ -93,7 +97,7 @@ public class MemcachedClientConstructorTest extends TestCase {
 
 	public void testNegativeTimeout() throws Exception {
 		try {
-			client = new MemcachedClient(new DefaultConnectionFactory() {
+			client = new MemcachedClient(new DefaultMemcachedConnectionFactory() {
 				@Override
 				public long getOperationTimeout() {
 					return -1;
@@ -107,7 +111,7 @@ public class MemcachedClientConstructorTest extends TestCase {
 
 	public void testZeroTimeout() throws Exception {
 		try {
-			client = new MemcachedClient(new DefaultConnectionFactory() {
+			client = new MemcachedClient(new DefaultMemcachedConnectionFactory() {
 				@Override
 				public long getOperationTimeout() {
 					return 0;
@@ -121,7 +125,7 @@ public class MemcachedClientConstructorTest extends TestCase {
 
 	public void testConnFactoryWithoutOpFactory() throws Exception {
 		try {
-			client = new MemcachedClient(new DefaultConnectionFactory(){
+			client = new MemcachedClient(new DefaultMemcachedConnectionFactory(){
 				@Override
 				public OperationFactory getOperationFactory() {
 					return null;
@@ -135,7 +139,7 @@ public class MemcachedClientConstructorTest extends TestCase {
 
 	public void testConnFactoryWithoutConns() throws Exception {
 		try {
-			client = new MemcachedClient(new DefaultConnectionFactory(){
+			client = new MemcachedClient(new DefaultMemcachedConnectionFactory(){
 				@Override
 				public MemcachedConnection createConnection(
 						List<InetSocketAddress> addrs) throws IOException {
@@ -153,7 +157,7 @@ public class MemcachedClientConstructorTest extends TestCase {
 		client = new MemcachedClient(AddrUtil.getAddresses("127.0.0.1:11211"));
 		assertTrue(client.getNodeLocator() instanceof ArrayModNodeLocator);
 		assertTrue(client.getNodeLocator().getPrimary("x")
-			instanceof MemcachedNodeROImpl);
+			instanceof ServerNodeROImpl);
 	}
 
 	public void testKetamaNodeLocatorAccessor() throws Exception {
@@ -161,7 +165,7 @@ public class MemcachedClientConstructorTest extends TestCase {
 			AddrUtil.getAddresses("127.0.0.1:11211"));
 		assertTrue(client.getNodeLocator() instanceof KetamaNodeLocator);
 		assertTrue(client.getNodeLocator().getPrimary("x")
-			instanceof MemcachedNodeROImpl);
+			instanceof ServerNodeROImpl);
 	}
 
 }

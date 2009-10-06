@@ -12,7 +12,7 @@ import java.util.Collection;
 
 import net.spy.nio.ops.Operation;
 
-class ServerNodeROImpl implements ServerNode {
+public class ServerNodeROImpl implements ServerNode {
 
 	private final ServerNode root;
 

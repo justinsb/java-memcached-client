@@ -1,5 +1,7 @@
 package net.spy.memcached;
 
+import net.spy.nio.FailureMode;
+
 /**
  * Test cancellation in the binary protocol.
  */

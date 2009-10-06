@@ -1,5 +1,8 @@
 package net.spy.memcached;
 
+import net.spy.nio.FailureMode;
+import net.spy.nio.OperationTimeoutException;
+
 public class TimeoutTest extends ClientBaseCase {
 
 	@Override
@@ -10,7 +13,7 @@ public class TimeoutTest extends ClientBaseCase {
 
 	@Override
 	protected void initClient() throws Exception {
-		client=new MemcachedClient(new DefaultConnectionFactory() {
+		client=new MemcachedClient(new DefaultMemcachedConnectionFactory() {
 			@Override
 			public long getOperationTimeout() {
 				return 1;

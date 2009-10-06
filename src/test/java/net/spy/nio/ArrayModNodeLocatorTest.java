@@ -1,4 +1,4 @@
-package net.spy.memcached;
+package net.spy.nio;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -34,7 +34,7 @@ public class ArrayModNodeLocatorTest extends AbstractNodeLocationCase {
 
 	public void testAll() throws Exception {
 		setupNodes(4);
-		Collection<MemcachedNode> all = locator.getAll();
+		Collection<? extends ServerNode> all = locator.getAll();
 		assertEquals(4, all.size());
 		assertTrue(all.contains(nodes[0]));
 		assertTrue(all.contains(nodes[1]));
@@ -44,7 +44,7 @@ public class ArrayModNodeLocatorTest extends AbstractNodeLocationCase {
 
 	public void testAllClone() throws Exception {
 		setupNodes(4);
-		Collection<MemcachedNode> all = locator.getReadonlyCopy().getAll();
+		Collection<? extends ServerNode> all = locator.getReadonlyCopy().getAll();
 		assertEquals(4, all.size());
 	}
 

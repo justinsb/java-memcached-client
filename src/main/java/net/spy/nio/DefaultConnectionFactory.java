@@ -132,7 +132,7 @@ public abstract class DefaultConnectionFactory extends SpyObject
 	/* (non-Javadoc)
 	 * @see net.spy.memcached.ConnectionFactory#createLocator(java.util.List)
 	 */
-	public ServerNodeLocator createLocator(List<ServerNode> nodes) {
+	public ServerNodeLocator createLocator(List<? extends ServerNode> nodes) {
 		if (nodes.size() == 1)
 			return new SingletonNodeLocator(nodes.get(0));
 

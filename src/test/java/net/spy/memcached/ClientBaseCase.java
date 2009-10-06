@@ -3,6 +3,8 @@ package net.spy.memcached;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import net.spy.nio.FailureMode;
+
 import junit.framework.TestCase;
 
 public abstract class ClientBaseCase extends TestCase {
@@ -10,7 +12,7 @@ public abstract class ClientBaseCase extends TestCase {
 	protected MemcachedClient client = null;
 
 	protected void initClient() throws Exception {
-		initClient(new DefaultConnectionFactory() {
+		initClient(new DefaultMemcachedConnectionFactory() {
 			@Override
 			public long getOperationTimeout() {
 				return 15000;
@@ -22,7 +24,7 @@ public abstract class ClientBaseCase extends TestCase {
 		});
 	}
 
-	protected void initClient(ConnectionFactory cf) throws Exception {
+	protected void initClient(MemcachedConnectionFactory cf) throws Exception {
 		client=new MemcachedClient(cf,
 			AddrUtil.getAddresses("127.0.0.1:11211"));
 	}

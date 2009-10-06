@@ -1,4 +1,4 @@
-package net.spy.memcached;
+package net.spy.nio;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
+
+import net.spy.memcached.AddrUtil;
 
 import junit.framework.TestCase;
 
@@ -29,13 +31,13 @@ public class ConsistentHashingTest extends TestCase {
 	private void runThisManyNodes(final int totalNodes) {
 		final String[] stringNodes = generateAddresses(totalNodes);
 
-		List<MemcachedNode> smaller = createNodes(
+		List<ServerNode> smaller = createNodes(
 			AddrUtil.getAddresses(stringNodes[0]));
-		List<MemcachedNode> larger = createNodes(
+		List<ServerNode> larger = createNodes(
 			AddrUtil.getAddresses(stringNodes[1]));
 
 		assertTrue(larger.containsAll(smaller));
-		MemcachedNode oddManOut = larger.get(larger.size()-1);
+		ServerNode oddManOut = larger.get(larger.size()-1);
 		assertFalse(smaller.contains(oddManOut));
 
 		KetamaNodeLocator lgLocator = new KetamaNodeLocator(
@@ -43,15 +45,15 @@ public class ConsistentHashingTest extends TestCase {
 		KetamaNodeLocator smLocator = new KetamaNodeLocator(
 			smaller, HashAlgorithm.KETAMA_HASH);
 
-		SortedMap<Long, MemcachedNode> lgMap = lgLocator.ketamaNodes;
-		SortedMap<Long, MemcachedNode> smMap = smLocator.ketamaNodes;
+		SortedMap<Long, ServerNode> lgMap = lgLocator.ketamaNodes;
+		SortedMap<Long, ServerNode> smMap = smLocator.ketamaNodes;
 
 		// Verify that EVERY entry in the smaller map has an equivalent
 		// mapping in the larger map.
 		boolean failed = false;
 		for (final Long key : smMap.keySet()) {
-			final MemcachedNode largeNode = lgMap.get(key);
-			final MemcachedNode smallNode = smMap.get(key);
+			final ServerNode largeNode = lgMap.get(key);
+			final ServerNode smallNode = smMap.get(key);
 			if (!largeNode.equals(smallNode)) {
 				failed = true;
 				System.out.println("---------------");
@@ -62,11 +64,11 @@ public class ConsistentHashingTest extends TestCase {
 		}
 		assertFalse(failed);
 
-		for (final Map.Entry<Long, MemcachedNode> entry : lgMap.entrySet()) {
+		for (final Map.Entry<Long, ServerNode> entry : lgMap.entrySet()) {
 			final Long key = entry.getKey();
-			final MemcachedNode node = entry.getValue();
+			final ServerNode node = entry.getValue();
 			if (node.equals(oddManOut)) {
-				final MemcachedNode newNode = smLocator.getNodeForKey(key);
+				final ServerNode newNode = smLocator.getNodeForKey(key);
 				if (!smaller.contains(newNode)) {
 					System.out.println(
 						"Error - " + key + " -> " + newNode.getSocketAddress());
@@ -115,11 +117,11 @@ public class ConsistentHashingTest extends TestCase {
 		return results;
 	}
 
-	private List<MemcachedNode> createNodes(List<InetSocketAddress> addresses) {
-		List<MemcachedNode> results = new ArrayList<MemcachedNode>();
+	private List<ServerNode> createNodes(List<InetSocketAddress> addresses) {
+		List<ServerNode> results = new ArrayList<ServerNode>();
 
 		for (InetSocketAddress addr : addresses) {
-			results.add(new MockMemcachedNode(addr));
+			results.add(new MockServerNode(addr));
 		}
 
 		return results;

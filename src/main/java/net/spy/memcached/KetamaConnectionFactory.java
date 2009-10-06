@@ -42,7 +42,7 @@ public class KetamaConnectionFactory extends DefaultMemcachedConnectionFactory {
 	 * @see net.spy.memcached.ConnectionFactory#createLocator(java.util.List)
 	 */
 	@Override
-	public ServerNodeLocator createLocator(List<ServerNode> nodes) {
+	public ServerNodeLocator createLocator(List<? extends ServerNode> nodes) {
 		return new KetamaNodeLocator(nodes, getHashAlg());
 	}
 }

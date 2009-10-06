@@ -20,7 +20,7 @@ public abstract class CancellationBaseCase extends ClientBaseCase {
 	}
 
 	@Override
-	protected void initClient(ConnectionFactory cf) throws Exception {
+	protected void initClient(MemcachedConnectionFactory cf) throws Exception {
 		client=new MemcachedClient(cf,
 			AddrUtil.getAddresses("127.0.0.1:11213"));
 	}

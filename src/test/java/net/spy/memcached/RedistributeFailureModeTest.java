@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import net.spy.nio.FailureMode;
+
 
 public class RedistributeFailureModeTest extends ClientBaseCase {
 
@@ -25,13 +27,13 @@ public class RedistributeFailureModeTest extends ClientBaseCase {
 	}
 
 	@Override
-	protected void initClient(ConnectionFactory cf) throws Exception {
+	protected void initClient(MemcachedConnectionFactory cf) throws Exception {
 		client=new MemcachedClient(cf, AddrUtil.getAddresses(serverList));
 	}
 
 	@Override
 	protected void initClient() throws Exception {
-		initClient(new DefaultConnectionFactory() {
+		initClient(new DefaultMemcachedConnectionFactory() {
 			@Override
 			public FailureMode getFailureMode() {
 				return FailureMode.Redistribute;

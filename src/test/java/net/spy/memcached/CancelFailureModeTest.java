@@ -3,6 +3,8 @@ package net.spy.memcached;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import net.spy.nio.FailureMode;
+
 public class CancelFailureModeTest extends ClientBaseCase {
 	private String serverList;
 
@@ -19,13 +21,13 @@ public class CancelFailureModeTest extends ClientBaseCase {
 	}
 
 	@Override
-	protected void initClient(ConnectionFactory cf) throws Exception {
+	protected void initClient(MemcachedConnectionFactory cf) throws Exception {
 		client=new MemcachedClient(cf, AddrUtil.getAddresses(serverList));
 	}
 
 	@Override
 	protected void initClient() throws Exception {
-		initClient(new DefaultConnectionFactory() {
+		initClient(new DefaultMemcachedConnectionFactory() {
 			@Override
 			public FailureMode getFailureMode() {
 				return FailureMode.Cancel;

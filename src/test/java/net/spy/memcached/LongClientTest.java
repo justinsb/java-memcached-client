@@ -21,7 +21,7 @@ public class LongClientTest extends ClientBaseCase {
 	public void testParallelGet() throws Throwable {
 		// Get a connection with the get optimization disabled.
 		client.shutdown();
-		initClient(new DefaultConnectionFactory(){
+		initClient(new DefaultMemcachedConnectionFactory(){
 			@Override
 			public MemcachedConnection createConnection(
 					List<InetSocketAddress> addrs) throws IOException {

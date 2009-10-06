@@ -1,5 +1,7 @@
 package net.spy.memcached;
 
+import net.spy.nio.ConnectionFactory;
+import net.spy.nio.HashAlgorithm;
 import junit.framework.TestCase;
 
 /**
@@ -22,7 +24,7 @@ public class ConnectionFactoryTest extends TestCase {
 	}
 
 	public void testQueueSizes() {
-		ConnectionFactory cf=new DefaultConnectionFactory(100, 1024);
+		ConnectionFactory cf=new DefaultMemcachedConnectionFactory(100, 1024);
 		assertEquals(100, cf.createOperationQueue().remainingCapacity());
 		assertEquals(Integer.MAX_VALUE,
 				cf.createWriteOperationQueue().remainingCapacity());

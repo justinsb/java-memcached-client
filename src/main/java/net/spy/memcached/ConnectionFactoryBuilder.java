@@ -185,7 +185,7 @@ public class ConnectionFactoryBuilder {
 	/**
 	 * Get the ConnectionFactory set up with the provided parameters.
 	 */
-	public ConnectionFactory build() {
+	public MemcachedConnectionFactory build() {
 		return new DefaultMemcachedConnectionFactory() {
 
 			@Override
@@ -209,7 +209,7 @@ public class ConnectionFactoryBuilder {
 			}
 
 			@Override
-			public ServerNodeLocator createLocator(List<ServerNode> nodes) {
+			public ServerNodeLocator createLocator(List<? extends ServerNode> nodes) {
 				switch(locator) {
 					case ARRAY_MOD:
 						return new ArrayModNodeLocator(nodes, getHashAlg());

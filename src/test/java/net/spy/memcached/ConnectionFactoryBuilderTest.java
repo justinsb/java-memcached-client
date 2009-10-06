@@ -11,8 +11,14 @@ import java.util.concurrent.LinkedBlockingQueue;
 import net.spy.memcached.ConnectionFactoryBuilder.Locator;
 import net.spy.memcached.ConnectionFactoryBuilder.Protocol;
 import net.spy.memcached.compat.BaseMockCase;
+import net.spy.nio.ArrayModNodeLocator;
+import net.spy.nio.ConnectionFactory;
+import net.spy.nio.ConnectionObserver;
+import net.spy.nio.FailureMode;
+import net.spy.nio.HashAlgorithm;
+import net.spy.nio.KetamaNodeLocator;
 import net.spy.nio.ops.Operation;
-import net.spy.memcached.ops.OperationQueueFactory;
+import net.spy.nio.ops.OperationQueueFactory;
 import net.spy.memcached.protocol.ascii.AsciiMemcachedNodeImpl;
 import net.spy.memcached.protocol.ascii.AsciiOperationFactory;
 import net.spy.memcached.protocol.binary.BinaryMemcachedNodeImpl;
@@ -34,21 +40,21 @@ public class ConnectionFactoryBuilderTest extends BaseMockCase {
 	}
 
 	public void testDefaults() throws Exception {
-		ConnectionFactory f = b.build();
-		assertEquals(DefaultConnectionFactory.DEFAULT_OPERATION_TIMEOUT,
+		MemcachedConnectionFactory f = b.build();
+		assertEquals(DefaultMemcachedConnectionFactory.DEFAULT_OPERATION_TIMEOUT,
 				f.getOperationTimeout());
-		assertEquals(DefaultConnectionFactory.DEFAULT_READ_BUFFER_SIZE,
+		assertEquals(DefaultMemcachedConnectionFactory.DEFAULT_READ_BUFFER_SIZE,
 				f.getReadBufSize());
-		assertSame(DefaultConnectionFactory.DEFAULT_HASH, f.getHashAlg());
+		assertSame(DefaultMemcachedConnectionFactory.DEFAULT_HASH, f.getHashAlg());
 		assertTrue(f.getDefaultTranscoder() instanceof SerializingTranscoder);
-		assertSame(DefaultConnectionFactory.DEFAULT_FAILURE_MODE,
+		assertSame(DefaultMemcachedConnectionFactory.DEFAULT_FAILURE_MODE,
 				f.getFailureMode());
 		assertEquals(0, f.getInitialObservers().size());
 		assertTrue(f.getOperationFactory() instanceof AsciiOperationFactory);
 
 		BlockingQueue<Operation> opQueue = f.createOperationQueue();
 		assertTrue(opQueue instanceof ArrayBlockingQueue<?>);
-		assertEquals(DefaultConnectionFactory.DEFAULT_OP_QUEUE_LEN,
+		assertEquals(DefaultMemcachedConnectionFactory.DEFAULT_OP_QUEUE_LEN,
 				opQueue.remainingCapacity());
 
 		BlockingQueue<Operation> readOpQueue = f.createReadOperationQueue();
@@ -63,7 +69,7 @@ public class ConnectionFactoryBuilderTest extends BaseMockCase {
 
 		SocketChannel sc = SocketChannel.open();
 		try {
-			assertTrue(f.createMemcachedNode(
+			assertTrue(f.createServerNode(
 					InetSocketAddress.createUnresolved("localhost", 11211),
 					sc, 1)
 					instanceof AsciiMemcachedNodeImpl);
@@ -93,7 +99,7 @@ public class ConnectionFactoryBuilderTest extends BaseMockCase {
 		OperationQueueFactory rQueueFactory = new DirectFactory(rQueue);
 		OperationQueueFactory wQueueFactory = new DirectFactory(wQueue);
 
-		ConnectionFactory f = b.setDaemon(false)
+		MemcachedConnectionFactory f = b.setDaemon(false)
 			.setShouldOptimize(false)
 			.setFailureMode(FailureMode.Redistribute)
 			.setHashAlg(HashAlgorithm.KETAMA_HASH)
@@ -131,7 +137,7 @@ public class ConnectionFactoryBuilderTest extends BaseMockCase {
 
 		SocketChannel sc = SocketChannel.open();
 		try {
-			assertTrue(f.createMemcachedNode(
+			assertTrue(f.createServerNode(
 					InetSocketAddress.createUnresolved("localhost", 11211),
 					sc, 1)
 					instanceof BinaryMemcachedNodeImpl);

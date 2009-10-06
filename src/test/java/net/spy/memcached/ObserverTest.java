@@ -7,6 +7,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import net.spy.memcached.compat.SpyObject;
+import net.spy.nio.ConnectionObserver;
 
 /**
  * Test observer hooks.
@@ -40,7 +41,7 @@ public class ObserverTest extends ClientBaseCase {
 		};
 
 		// Get a new client
-		initClient(new DefaultConnectionFactory() {
+		initClient(new DefaultMemcachedConnectionFactory() {
 
 			@Override
 			public Collection<ConnectionObserver> getInitialObservers() {

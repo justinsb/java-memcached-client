@@ -206,7 +206,7 @@ public abstract class NioClientBase extends SpyThread {
 	 * @param op the operation to perform
 	 * @return the Operation
 	 */
-	protected Operation addOp(final String key, final Operation op) {
+	public Operation addOp(final String key, final Operation op) {
 		validateKey(key);
 		checkState();
 		conn.addOperation(key, op);

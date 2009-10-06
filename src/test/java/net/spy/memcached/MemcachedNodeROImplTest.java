@@ -5,6 +5,8 @@ import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
+import net.spy.nio.ServerNodeROImpl;
+
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
 
@@ -16,8 +18,8 @@ public class MemcachedNodeROImplTest extends MockObjectTestCase {
 	public void testReadOnliness() throws Exception {
 		SocketAddress sa=new InetSocketAddress(11211);
 		Mock m = mock(MemcachedNode.class, "node");
-		MemcachedNodeROImpl node=
-			new MemcachedNodeROImpl((MemcachedNode)m.proxy());
+		ServerNodeROImpl node=
+			new ServerNodeROImpl((MemcachedNode)m.proxy());
 		m.expects(once()).method("getSocketAddress").will(returnValue(sa));
 
 		assertSame(sa, node.getSocketAddress());

@@ -22,7 +22,7 @@ public final class ArrayModNodeLocator implements ServerNodeLocator {
 	 * @param n the array of nodes
 	 * @param alg the hash algorithm
 	 */
-	public ArrayModNodeLocator(List<ServerNode> n, HashAlgorithm alg) {
+	public ArrayModNodeLocator(List<? extends ServerNode> n, HashAlgorithm alg) {
 		super();
 		nodes=n.toArray(new ServerNode[n.size()]);
 		hashAlg=alg;

@@ -52,7 +52,7 @@ public interface ConnectionFactory {
 	/**
 	 * Create a NodeLocator instance for the given list of nodes.
 	 */
-	ServerNodeLocator createLocator(List<ServerNode> nodes);
+	ServerNodeLocator createLocator(List<? extends ServerNode> nodes);
 
 	/**
 	 * Get the operation timeout used by this connection.

@@ -1,5 +1,6 @@
 <projectDescription>
-  <name>memcached</name>
+  <name>memcached-client</name>
+  <comment>Dustin&apos;s Memcached client</comment>
   <projects/>
   <buildSpec>
     <buildCommand>

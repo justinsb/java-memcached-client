@@ -14,10 +14,11 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import net.spy.memcached.compat.SyncThread;
-import net.spy.memcached.ops.OperationErrorType;
-import net.spy.memcached.ops.OperationException;
+import net.spy.nio.OperationTimeoutException;
+import net.spy.nio.ops.OperationErrorType;
+import net.spy.nio.ops.OperationException;
 import net.spy.memcached.transcoders.SerializingTranscoder;
-import net.spy.nio.transcoders.Transcoder;
+import net.spy.memcached.transcoders.Transcoder;
 
 
 public abstract class ProtocolBaseCase extends ClientBaseCase {
@@ -514,7 +515,7 @@ public abstract class ProtocolBaseCase extends ClientBaseCase {
 		assertTrue("Couldn't shut down within five seconds",
 			client.shutdown(5, TimeUnit.SECONDS));
 
-		initClient(new DefaultConnectionFactory() {
+		initClient(new DefaultMemcachedConnectionFactory() {
 			@Override
 			public long getOperationTimeout() {
 				return 1;
