@@ -11,12 +11,15 @@ public final class OperationException extends IOException {
 
 	private final OperationErrorType type;
 
+	private final int errorCode;
+	
 	/**
 	 * General exception (no message).
 	 */
 	public OperationException() {
 		super();
 		type=OperationErrorType.GENERAL;
+		this.errorCode = 0;
 	}
 
 	/**
@@ -28,6 +31,13 @@ public final class OperationException extends IOException {
 	public OperationException(OperationErrorType eType, String msg) {
 		super(msg);
 		type=eType;
+		this.errorCode = 0;
+	}
+
+	public OperationException(OperationErrorType eType, int errorCode) {
+		super();
+		this.type=eType;
+		this.errorCode = errorCode;
 	}
 
 	/**
@@ -45,6 +55,13 @@ public final class OperationException extends IOException {
 		} else {
 			rv="OperationException: " + type + ": " + getMessage();
 		}
+		if (errorCode != 0) {
+			rv += " ErrorCode=" + errorCode;
+		}
 		return rv;
+	}
+
+	public int getErrorCode() {
+		return errorCode;
 	}
 }

@@ -4,21 +4,26 @@ package net.spy.nio.ops;
  * Status indicator.
  */
 public class OperationStatus {
-
-	private final boolean isSuccess;
+	private final boolean success;
 	private final String message;
+	private final int errorCode;
 
-	public OperationStatus(boolean success, String msg) {
+	public OperationStatus(boolean success, String message) {
+		this(success, message, 0);
+	}
+
+	public OperationStatus(boolean success, String message, int errorCode) {
 		super();
-		isSuccess = success;
-		message = msg;
+		this.success = success;
+		this.errorCode = errorCode;
+		this.message = message;
 	}
 
 	/**
 	 * Does this status indicate success?
 	 */
 	public boolean isSuccess() {
-		return isSuccess;
+		return success;
 	}
 
 	/**
@@ -28,8 +33,12 @@ public class OperationStatus {
 		return message;
 	}
 
+	public int getErrorCode() {
+		return errorCode;
+	}
+
 	@Override
 	public String toString() {
-		return "{OperationStatus success=" + isSuccess + ":  " + message + "}";
+		return "{OperationStatus success=" + success + ":  " + message + (errorCode != 0 ? " code=" + errorCode : "") + "}";
 	}
 }

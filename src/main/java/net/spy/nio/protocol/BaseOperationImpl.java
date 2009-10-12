@@ -116,6 +116,7 @@ public abstract class BaseOperationImpl extends SpyObject {
 	protected void handleError(OperationErrorType eType, String line)
 		throws IOException {
 		getLogger().error("Error:  %s", line);
+		OperationException exception = null;
 		switch(eType) {
 			case GENERAL:
 				exception=new OperationException();
@@ -128,6 +129,12 @@ public abstract class BaseOperationImpl extends SpyObject {
 				break;
 			default: assert false;
 		}
+		handleError(exception);
+	}
+	
+	protected void handleError(OperationException exception) 
+	throws IOException {
+		this.exception = exception;
 		transitionState(OperationState.COMPLETE);
 		throw exception;
 	}
