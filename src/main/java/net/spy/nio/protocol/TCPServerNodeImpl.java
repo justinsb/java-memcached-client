@@ -32,12 +32,14 @@ public abstract class TCPServerNodeImpl extends SpyObject
 	private volatile int reconnectAttempt=1;
 	private SocketChannel channel;
 	private int toWrite=0;
-	protected Operation optimizedOp=null;
+	protected Operation currentWriteOp = null;
 	private volatile SelectionKey sk=null;
-
+	private final boolean shouldOptimize;
+	
 	public TCPServerNodeImpl(SocketAddress sa, SocketChannel c,
 			int bufSize, BlockingQueue<Operation> rq,
-			BlockingQueue<Operation> wq, BlockingQueue<Operation> iq) {
+			BlockingQueue<Operation> wq, BlockingQueue<Operation> iq,
+			boolean shouldOptimize) {
 		super();
 		assert sa != null : "No SocketAddress";
 		assert c != null : "No SocketChannel";
@@ -53,6 +55,7 @@ public abstract class TCPServerNodeImpl extends SpyObject
 		readQ=rq;
 		writeQ=wq;
 		inputQueue=iq;
+		this.shouldOptimize = shouldOptimize;
 	}
 
 	/* (non-Javadoc)
@@ -136,9 +139,6 @@ public abstract class TCPServerNodeImpl extends SpyObject
 					transitionWriteItem();
 
 					preparePending();
-					if(shouldOptimize) {
-						optimize();
-					}
 
 					o=getCurrentWriteOp();
 				}
@@ -168,7 +168,7 @@ public abstract class TCPServerNodeImpl extends SpyObject
 	/* (non-Javadoc)
 	 * @see net.spy.memcached.MemcachedNode#optimize()
 	 */
-	protected abstract void optimize();
+	protected abstract Operation optimize();
 
 	/* (non-Javadoc)
 	 * @see net.spy.memcached.MemcachedNode#getCurrentReadOp()
@@ -188,19 +188,23 @@ public abstract class TCPServerNodeImpl extends SpyObject
 	 * @see net.spy.memcached.MemcachedNode#getCurrentWriteOp()
 	 */
 	public final Operation getCurrentWriteOp() {
-		return optimizedOp == null ? writeQ.peek() : optimizedOp;
+		if (currentWriteOp == null) {
+			if (shouldOptimize) {
+				currentWriteOp = optimize();
+			}
+			if (currentWriteOp == null) {
+				currentWriteOp = writeQ.poll();
+			}
+		}
+		return currentWriteOp;
 	}
 
 	/* (non-Javadoc)
 	 * @see net.spy.memcached.MemcachedNode#removeCurrentWriteOp()
 	 */
 	public final Operation removeCurrentWriteOp() {
-		Operation rv=optimizedOp;
-		if(rv == null) {
-			rv=writeQ.remove();
-		} else {
-			optimizedOp=null;
-		}
+		Operation rv=currentWriteOp;
+		currentWriteOp = null;
 		return rv;
 	}
 
@@ -215,7 +219,7 @@ public abstract class TCPServerNodeImpl extends SpyObject
 	 * @see net.spy.memcached.MemcachedNode#hasWriteOp()
 	 */
 	public final boolean hasWriteOp() {
-		return !(optimizedOp == null && writeQ.isEmpty());
+		return !(currentWriteOp == null && writeQ.isEmpty());
 	}
 
 	/* (non-Javadoc)
@@ -303,8 +307,8 @@ public abstract class TCPServerNodeImpl extends SpyObject
 		if(getSk()!= null && getSk().isValid()) {
 			sops=getSk().interestOps();
 		}
-		int rsize=readQ.size() + (optimizedOp == null ? 0 : 1);
-		int wsize=writeQ.size();
+		int rsize=readQ.size();
+		int wsize=writeQ.size() + (currentWriteOp == null ? 0 : 1);
 		int isize=inputQueue.size();
 		return "{QA sa=" + getSocketAddress() + ", #Rops=" + rsize
 			+ ", #Wops=" + wsize

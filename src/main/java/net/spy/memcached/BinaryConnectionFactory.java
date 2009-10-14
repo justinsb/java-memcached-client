@@ -44,7 +44,8 @@ public class BinaryConnectionFactory extends DefaultMemcachedConnectionFactory {
 		return new BinaryMemcachedNodeImpl(sa, c, bufSize,
 			createReadOperationQueue(),
 			createWriteOperationQueue(),
-			createOperationQueue());
+			createOperationQueue(),
+			shouldOptimize());
 	}
 
 	@Override

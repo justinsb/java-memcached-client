@@ -62,7 +62,7 @@ public class CacheLoader extends SpyObject {
 			watch(e.getKey(), mostRecent);
 		}
 
-		return mostRecent == null ? new ImmediateFuture(true) : mostRecent;
+		return mostRecent == null ? ImmediateFuture.TRUE : mostRecent;
 	}
 
 	/**

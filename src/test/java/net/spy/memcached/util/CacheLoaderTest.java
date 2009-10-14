@@ -42,13 +42,13 @@ public class CacheLoaderTest extends BaseMockCase {
 				es, sl, 0);
 
 		m.expects(once()).method("set").with(eq("a"), eq(0), eq(1))
-			.will(returnValue(new ImmediateFuture(true)));
+			.will(returnValue(ImmediateFuture.TRUE));
 		m.expects(once()).method("set").with(eq("a"), eq(0), eq(1))
 			.will(throwException(new IllegalStateException("Full up")));
 		m.expects(once()).method("set").with(eq("b"), eq(0), eq(2))
 			.will(returnValue(new ImmediateFuture(new RuntimeException("blah"))));
 		m.expects(once()).method("set").with(eq("c"), eq(0), eq(3))
-			.will(returnValue(new ImmediateFuture(false)));
+			.will(returnValue(ImmediateFuture.FALSE));
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("a", 1);

@@ -14,8 +14,8 @@ import net.spy.nio.protocol.TCPServerNodeImpl;
  */
 public abstract class TCPMemcachedNodeImpl extends TCPServerNodeImpl implements MemcachedNode {
 
-	public TCPMemcachedNodeImpl(SocketAddress sa, SocketChannel c, int bufSize, BlockingQueue<Operation> rq, BlockingQueue<Operation> wq, BlockingQueue<Operation> iq) {
-		super(sa, c, bufSize, rq, wq, iq);
+	public TCPMemcachedNodeImpl(SocketAddress sa, SocketChannel c, int bufSize, BlockingQueue<Operation> rq, BlockingQueue<Operation> wq, BlockingQueue<Operation> iq, boolean shouldOptimize) {
+		super(sa, c, bufSize, rq, wq, iq, shouldOptimize);
 	}
 
 }

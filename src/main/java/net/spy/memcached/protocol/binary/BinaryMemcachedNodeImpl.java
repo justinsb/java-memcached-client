@@ -22,24 +22,27 @@ public class BinaryMemcachedNodeImpl extends TCPMemcachedNodeImpl {
 
 	public BinaryMemcachedNodeImpl(SocketAddress sa, SocketChannel c,
 			int bufSize, BlockingQueue<Operation> rq,
-			BlockingQueue<Operation> wq, BlockingQueue<Operation> iq) {
-		super(sa, c, bufSize, rq, wq, iq);
+			BlockingQueue<Operation> wq, BlockingQueue<Operation> iq,
+			boolean shouldOptimize) {
+		super(sa, c, bufSize, rq, wq, iq, shouldOptimize);
 	}
 
 	@Override
-	protected void optimize() {
+	protected Operation optimize() {
 		Operation firstOp = writeQ.peek();
 		if(firstOp instanceof GetOperation) {
-			optimizeGets();
+			return optimizeGets();
 		} else if(firstOp instanceof CASOperation) {
-			optimizeSets();
+			return optimizeSets();
+		} else {
+			return null;
 		}
 	}
 
-	private void optimizeGets() {
+	private Operation optimizeGets() {
 		// make sure there are at least two get operations in a row before
 		// attempting to optimize them.
-		optimizedOp=writeQ.remove();
+		Operation optimizedOp=writeQ.remove();
 		if(writeQ.peek() instanceof GetOperation) {
 			OptimizedGetImpl og=new OptimizedGetImpl(
 					(GetOperation)optimizedOp);
@@ -59,12 +62,14 @@ public class BinaryMemcachedNodeImpl extends TCPMemcachedNodeImpl {
 			getLogger().debug("Set up %s with %s keys and %s callbacks",
 					this, pcb.numKeys(), pcb.numCallbacks());
 		}
+		
+		return optimizedOp;
 	}
 
-	private void optimizeSets() {
+	private Operation optimizeSets() {
 		// make sure there are at least two get operations in a row before
 		// attempting to optimize them.
-		optimizedOp=writeQ.remove();
+		Operation optimizedOp=writeQ.remove();
 		if(writeQ.peek() instanceof CASOperation) {
 			OptimizedSetImpl og=new OptimizedSetImpl(
 					(CASOperation)optimizedOp);
@@ -83,5 +88,7 @@ public class BinaryMemcachedNodeImpl extends TCPMemcachedNodeImpl {
 			optimizedOp.initialize();
 			assert optimizedOp.getState() == OperationState.WRITING;
 		}
+		
+		return optimizedOp;
 	}
 }

@@ -113,6 +113,7 @@ public abstract class BaseOperationImpl extends SpyObject {
 
 	public abstract void readFromBuffer(ByteBuffer data) throws IOException;
 
+	
 	protected void handleError(OperationErrorType eType, String line)
 		throws IOException {
 		getLogger().error("Error:  %s", line);

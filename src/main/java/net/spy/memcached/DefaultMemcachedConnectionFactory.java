@@ -36,12 +36,14 @@ public class DefaultMemcachedConnectionFactory extends DefaultConnectionFactory 
 			return new AsciiMemcachedNodeImpl(sa, c, bufSize,
 				createReadOperationQueue(),
 				createWriteOperationQueue(),
-				createOperationQueue());
+				createOperationQueue(),
+				shouldOptimize());
 		} else if(of instanceof BinaryOperationFactory) {
 			return new BinaryMemcachedNodeImpl(sa, c, bufSize,
 					createReadOperationQueue(),
 					createWriteOperationQueue(),
-					createOperationQueue());
+					createOperationQueue(),
+					shouldOptimize());
 		} else {
 			throw new IllegalStateException(
 				"Unhandled operation factory type " + of);

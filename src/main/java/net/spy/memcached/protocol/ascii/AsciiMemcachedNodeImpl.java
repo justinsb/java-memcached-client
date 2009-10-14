@@ -18,12 +18,14 @@ public final class AsciiMemcachedNodeImpl extends TCPMemcachedNodeImpl  {
 
 	public AsciiMemcachedNodeImpl(SocketAddress sa, SocketChannel c,
 			int bufSize, BlockingQueue<Operation> rq,
-			BlockingQueue<Operation> wq, BlockingQueue<Operation> iq) {
-		super(sa, c, bufSize, rq, wq, iq);
+			BlockingQueue<Operation> wq, BlockingQueue<Operation> iq,
+			boolean shouldOptimize) {
+		super(sa, c, bufSize, rq, wq, iq, shouldOptimize);
 	}
 
 	@Override
-	protected void optimize() {
+	protected Operation optimize() {
+		Operation optimizedOp = null;
 		// make sure there are at least two get operations in a row before
 		// attempting to optimize them.
 		if(writeQ.peek() instanceof GetOperation) {
@@ -48,6 +50,8 @@ public final class AsciiMemcachedNodeImpl extends TCPMemcachedNodeImpl  {
 					this, pcb.numKeys(), pcb.numCallbacks());
 			}
 		}
+		
+		return optimizedOp;
 	}
 
 }
