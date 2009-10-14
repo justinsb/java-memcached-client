@@ -15,7 +15,17 @@ public class ImmediateFuture implements Future<Boolean> {
 	private final Boolean value;
 	private final ExecutionException exception;
 
-	public ImmediateFuture(Boolean returnValue) {
+	public static ImmediateFuture TRUE = new ImmediateFuture(true);
+	public static ImmediateFuture FALSE = new ImmediateFuture(false);
+	public static ImmediateFuture NULL = new ImmediateFuture((Boolean) null);
+
+	public static ImmediateFuture build(Boolean returnValue) {
+		if (returnValue == null)
+			return NULL;
+		return (returnValue.booleanValue() ? TRUE : FALSE);
+	}
+
+	private ImmediateFuture(Boolean returnValue) {
 		value = returnValue;
 		exception = null;
 	}
