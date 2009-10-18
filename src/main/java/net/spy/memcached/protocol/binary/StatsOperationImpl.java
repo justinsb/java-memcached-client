@@ -1,6 +1,7 @@
 package net.spy.memcached.protocol.binary;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 import net.spy.nio.ops.OperationState;
 import net.spy.memcached.ops.StatsOperation;
@@ -17,8 +18,8 @@ public class StatsOperationImpl extends OperationImpl
 	}
 
 	@Override
-	public void initialize() {
-		prepareBuffer(key, 0, EMPTY_BYTES);
+	public ByteBuffer buildBuffer() {
+		return buildBuffer(key, 0, EMPTY_BYTES);
 	}
 
 	@Override

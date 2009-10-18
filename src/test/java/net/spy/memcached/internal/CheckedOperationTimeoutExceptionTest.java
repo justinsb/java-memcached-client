@@ -56,10 +56,10 @@ public class CheckedOperationTimeoutExceptionTest extends TestCase {
 	static class TestOperation extends BaseOperationImpl implements Operation {
 
 		@Override
-		public void initialize() {
+		public ByteBuffer buildBuffer() {
 			throw new RuntimeException("Not implemented.");
 		}
-
+		
 		@Override
 		public void readFromBuffer(ByteBuffer data) throws IOException {
 			throw new RuntimeException("Not implemented");

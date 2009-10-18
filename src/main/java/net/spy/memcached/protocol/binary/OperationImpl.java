@@ -226,7 +226,7 @@ abstract class OperationImpl extends BaseOperationImpl {
 	 * @param val the data payload
 	 * @param extraHeaders any additional headers that need to be sent
 	 */
-	protected void prepareBuffer(String key, long cas, byte[] val,
+	protected ByteBuffer buildBuffer(String key, long cas, byte[] val,
 			Object... extraHeaders) {
 		int extraLen=0;
 		for(Object o : extraHeaders) {
@@ -278,7 +278,7 @@ abstract class OperationImpl extends BaseOperationImpl {
 		bb.put(val);
 
 		bb.flip();
-		setBuffer(bb);
+		return bb;
 	}
 
 	/**

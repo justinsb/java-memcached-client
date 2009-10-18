@@ -1,5 +1,6 @@
 package net.spy.memcached.protocol.binary;
 
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -40,8 +41,8 @@ class ConcatenationOperationImpl extends OperationImpl
 	}
 
 	@Override
-	public void initialize() {
-		prepareBuffer(key, cas, data);
+	public ByteBuffer buildBuffer() {
+		return buildBuffer(key, cas, data);
 	}
 
 	@Override

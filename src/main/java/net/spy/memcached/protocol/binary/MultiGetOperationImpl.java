@@ -46,7 +46,7 @@ class MultiGetOperationImpl extends OperationImpl implements GetOperation {
 	}
 
 	@Override
-	public void initialize() {
+	public ByteBuffer buildBuffer() {
 		int size=(1+keys.size()) * MIN_RECV_PACKET;
 		for(byte[] b : bkeys.values()) {
 			size += b.length;
@@ -81,7 +81,7 @@ class MultiGetOperationImpl extends OperationImpl implements GetOperation {
 		bb.putLong(0); // cas
 
 		bb.flip();
-		setBuffer(bb);
+		return bb;
 	}
 
 	@Override

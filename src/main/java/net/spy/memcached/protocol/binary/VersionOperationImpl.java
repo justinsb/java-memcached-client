@@ -1,5 +1,7 @@
 package net.spy.memcached.protocol.binary;
 
+import java.nio.ByteBuffer;
+
 import net.spy.nio.ops.OperationCallback;
 import net.spy.nio.ops.OperationStatus;
 import net.spy.memcached.ops.VersionOperation;
@@ -13,8 +15,8 @@ class VersionOperationImpl extends OperationImpl implements VersionOperation {
 	}
 
 	@Override
-	public void initialize() {
-		prepareBuffer("", 0, EMPTY_BYTES);
+	public ByteBuffer buildBuffer() {
+		return buildBuffer("", 0, EMPTY_BYTES);
 	}
 
 	@Override

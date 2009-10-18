@@ -40,12 +40,12 @@ final class DeleteOperationImpl extends OperationImpl
 	}
 
 	@Override
-	public void initialize() {
+	public final ByteBuffer buildBuffer() {
 		ByteBuffer b=ByteBuffer.allocate(
 			KeyUtil.getKeyBytes(key).length + OVERHEAD);
 		setArguments(b, "delete", key);
 		b.flip();
-		setBuffer(b);
+		return b;
 	}
 
 	public Collection<String> getKeys() {

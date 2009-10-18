@@ -75,7 +75,7 @@ abstract class OperationImpl extends BaseOperationImpl implements Operation {
 	/**
 	 * Set some arguments for an operation into the given byte buffer.
 	 */
-	protected final void setArguments(ByteBuffer bb, Object... args) {
+	protected final static void setArguments(ByteBuffer bb, Object... args) {
 		boolean wasFirst=true;
 		for(Object o : args) {
 			if(wasFirst) {
@@ -140,4 +140,5 @@ abstract class OperationImpl extends BaseOperationImpl implements Operation {
 	 * @see net.spy.memcached.protocol.ascii.Operation#handleLine(java.lang.String)
 	 */
 	public abstract void handleLine(String line);
+	
 }

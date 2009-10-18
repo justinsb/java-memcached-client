@@ -23,7 +23,7 @@ public abstract class BaseOperationImpl extends SpyObject {
 	public static final OperationStatus CANCELLED =
 		new CancelledOperationStatus();
 	private OperationState state = OperationState.WRITING;
-	private ByteBuffer cmd = null;
+	private ByteBuffer buffer = null;
 	private boolean cancelled = false;
 	private OperationException exception = null;
 	protected OperationCallback callback = null;
@@ -77,18 +77,22 @@ public abstract class BaseOperationImpl extends SpyObject {
 	}
 
 	public final ByteBuffer getBuffer() {
-		assert cmd != null : "No output buffer.";
-		return cmd;
+		if (buffer == null) {
+			ByteBuffer bb = buildBuffer();
+			bb.mark();
+			buffer = bb;
+		}
+		return buffer;
 	}
-
+	
+	public final boolean hasBuiltBuffer() {
+		return buffer != null;
+	}
+	
 	/**
-	 * Set the write buffer for this operation.
+	 * Build the message for this operation
 	 */
-	protected final void setBuffer(ByteBuffer to) {
-		assert to != null : "Trying to set buffer to null";
-		cmd=to;
-		cmd.mark();
-	}
+	protected abstract ByteBuffer buildBuffer();
 
 	/**
 	 * Transition the state of this operation to the given state.
@@ -98,7 +102,7 @@ public abstract class BaseOperationImpl extends SpyObject {
 		state=newState;
 		// Discard our buffer when we no longer need it.
 		if(state != OperationState.WRITING) {
-			cmd=null;
+			buffer=null;
 		}
 		if(state == OperationState.COMPLETE) {
 			callback.complete();
@@ -109,7 +113,10 @@ public abstract class BaseOperationImpl extends SpyObject {
 		transitionState(OperationState.READING);
 	}
 
-	public abstract void initialize();
+	public final void initialize() {
+		if (hasBuiltBuffer())
+			throw new IllegalStateException();
+	}
 
 	public abstract void readFromBuffer(ByteBuffer data) throws IOException;
 

@@ -31,8 +31,8 @@ final class VersionOperationImpl extends OperationImpl
 	}
 
 	@Override
-	public void initialize() {
-		setBuffer(ByteBuffer.wrap(REQUEST));
+	public final ByteBuffer buildBuffer() {
+		return (ByteBuffer.wrap(REQUEST));
 	}
 
 }

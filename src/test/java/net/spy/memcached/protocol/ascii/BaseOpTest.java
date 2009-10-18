@@ -130,8 +130,8 @@ public class BaseOpTest extends BaseMockCase {
 		}
 
 		@Override
-		public void initialize() {
-			setBuffer(ByteBuffer.allocate(0));
+		public final ByteBuffer buildBuffer() {
+			return (ByteBuffer.allocate(0));
 		}
 
 	}

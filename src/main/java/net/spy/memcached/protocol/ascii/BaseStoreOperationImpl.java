@@ -42,7 +42,7 @@ abstract class BaseStoreOperationImpl extends OperationImpl {
 	}
 
 	@Override
-	public void initialize() {
+	public final ByteBuffer buildBuffer() {
 		ByteBuffer bb=ByteBuffer.allocate(data.length
 				+ KeyUtil.getKeyBytes(key).length + OVERHEAD);
 		setArguments(bb, type, key, flags, exp, data.length);
@@ -52,7 +52,7 @@ abstract class BaseStoreOperationImpl extends OperationImpl {
 		bb.put(data);
 		bb.put(CRLF);
 		bb.flip();
-		setBuffer(bb);
+		return bb;
 	}
 
 	@Override

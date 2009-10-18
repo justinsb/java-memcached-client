@@ -27,8 +27,8 @@ public class AsciiClientTest extends ProtocolBaseCase {
 			}
 
 			@Override
-			public void initialize() {
-				setBuffer(ByteBuffer.wrap("garbage\r\n".getBytes()));
+			public ByteBuffer buildBuffer() {
+				return ByteBuffer.wrap("garbage\r\n".getBytes());
 			}});
 	}
 

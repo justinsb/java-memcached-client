@@ -1,5 +1,7 @@
 package net.spy.memcached.protocol.binary;
 
+import java.nio.ByteBuffer;
+
 import net.spy.memcached.ops.FlushOperation;
 import net.spy.nio.ops.OperationCallback;
 
@@ -18,8 +20,8 @@ class FlushOperationImpl extends OperationImpl implements FlushOperation {
 	}
 
 	@Override
-	public void initialize() {
-		prepareBuffer("", 0, EMPTY_BYTES, delay);
+	public ByteBuffer buildBuffer() {
+		return buildBuffer("", 0, EMPTY_BYTES, delay);
 	}
 
 }

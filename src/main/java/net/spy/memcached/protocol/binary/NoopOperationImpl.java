@@ -1,5 +1,7 @@
 package net.spy.memcached.protocol.binary;
 
+import java.nio.ByteBuffer;
+
 import net.spy.memcached.ops.NoopOperation;
 import net.spy.nio.ops.OperationCallback;
 
@@ -15,8 +17,8 @@ class NoopOperationImpl extends OperationImpl implements NoopOperation {
 	}
 
 	@Override
-	public void initialize() {
-		prepareBuffer("", 0, EMPTY_BYTES);
+	public ByteBuffer buildBuffer() {
+		return buildBuffer("", 0, EMPTY_BYTES);
 	}
 
 }

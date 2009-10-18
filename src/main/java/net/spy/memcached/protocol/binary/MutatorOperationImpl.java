@@ -1,5 +1,6 @@
 package net.spy.memcached.protocol.binary;
 
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -32,7 +33,7 @@ class MutatorOperationImpl extends OperationImpl implements
 	}
 
 	@Override
-	public void initialize() {
+	public ByteBuffer buildBuffer() {
 		// We're passing around a long so we can cover an unsigned integer.
 		byte[] defBytes=new byte[8];
 		defBytes[0]=(byte)((def >> 56) & 0xff);
@@ -43,7 +44,7 @@ class MutatorOperationImpl extends OperationImpl implements
 		defBytes[5]=(byte)((def >> 16) & 0xff);
 		defBytes[6]=(byte)((def >> 8) & 0xff);
 		defBytes[7]=(byte)(def & 0xff);
-		prepareBuffer(key, 0, EMPTY_BYTES, by, defBytes, exp);
+		return buildBuffer(key, 0, EMPTY_BYTES, by, defBytes, exp);
 	}
 
 	@Override

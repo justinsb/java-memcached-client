@@ -1,5 +1,6 @@
 package net.spy.memcached.protocol.binary;
 
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -26,8 +27,8 @@ class DeleteOperationImpl extends OperationImpl implements
 	}
 
 	@Override
-	public void initialize() {
-		prepareBuffer(key, cas, EMPTY_BYTES);
+	public ByteBuffer buildBuffer() {
+		return buildBuffer(key, cas, EMPTY_BYTES);
 	}
 
 	@Override

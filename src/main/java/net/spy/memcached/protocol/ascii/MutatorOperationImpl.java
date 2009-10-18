@@ -50,12 +50,12 @@ final class MutatorOperationImpl extends OperationImpl
 	}
 
 	@Override
-	public void initialize() {
+	public final ByteBuffer buildBuffer() {
 		int size=KeyUtil.getKeyBytes(key).length + OVERHEAD;
 		ByteBuffer b=ByteBuffer.allocate(size);
 		setArguments(b, mutator.name(), key, amount);
 		b.flip();
-		setBuffer(b);
+		return b;
 	}
 
 	@Override

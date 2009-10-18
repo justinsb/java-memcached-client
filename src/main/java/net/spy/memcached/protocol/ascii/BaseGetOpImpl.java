@@ -125,7 +125,7 @@ abstract class BaseGetOpImpl extends OperationImpl {
 	}
 
 	@Override
-	public final void initialize() {
+	public final ByteBuffer buildBuffer() {
 		// Figure out the length of the request
 		int size=6; // Enough for gets\r\n
 		Collection<byte[]> keyBytes=KeyUtil.getKeyBytes(keys);
@@ -141,7 +141,7 @@ abstract class BaseGetOpImpl extends OperationImpl {
 		}
 		b.put("\r\n".getBytes());
 		b.flip();
-		setBuffer(b);
+		return b;
 	}
 
 	@Override

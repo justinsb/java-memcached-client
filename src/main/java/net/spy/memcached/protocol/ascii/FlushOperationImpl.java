@@ -35,7 +35,7 @@ final class FlushOperationImpl extends OperationImpl
 	}
 
 	@Override
-	public void initialize() {
+	public final ByteBuffer buildBuffer() {
 		ByteBuffer b=null;
 		if(delay == -1) {
 			b=ByteBuffer.wrap(FLUSH);
@@ -44,6 +44,6 @@ final class FlushOperationImpl extends OperationImpl
 			b.put( ("flush_all " + delay + "\r\n").getBytes());
 			b.flip();
 		}
-		setBuffer(b);
+		return b;
 	}
 }

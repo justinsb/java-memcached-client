@@ -57,7 +57,7 @@ public class OptimizedSetImpl extends OperationImpl implements Operation {
 	}
 
 	@Override
-	public void initialize() {
+	public ByteBuffer buildBuffer() {
 		// Now create a buffer.
 		ByteBuffer bb=ByteBuffer.allocate(byteCount);
 		for(CASOperation so : ops) {
@@ -101,7 +101,7 @@ public class OptimizedSetImpl extends OperationImpl implements Operation {
 		bb.putLong(0); // cas
 
 		bb.flip();
-		setBuffer(bb);
+		return bb;
 	}
 
 	private static int cmdMap(StoreType t) {

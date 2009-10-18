@@ -44,8 +44,8 @@ final class StatsOperationImpl extends OperationImpl
 	}
 
 	@Override
-	public void initialize() {
-		setBuffer(ByteBuffer.wrap(msg));
+	public final ByteBuffer buildBuffer() {
+		return ByteBuffer.wrap(msg);
 	}
 
 	@Override
