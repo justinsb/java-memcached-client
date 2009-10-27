@@ -1,0 +1,9 @@
+.project
+.classpath
+.settings/
+cobertura.ser
+target/
+reports/
+junit*
+*.iml
+*~

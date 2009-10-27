@@ -1,0 +1,73 @@
+package net.spy.memcached;
+
+import net.spy.nio.FailureMode;
+import net.spy.nio.OperationTimeoutException;
+
+public class TimeoutTest extends ClientBaseCase {
+
+	@Override
+	protected void tearDown() throws Exception {
+		// override teardown to avoid the flush phase
+		client.shutdown();
+	}
+
+	@Override
+	protected void initClient() throws Exception {
+		client=new MemcachedClient(new DefaultMemcachedConnectionFactory() {
+			@Override
+			public long getOperationTimeout() {
+				return 1;
+			}
+			@Override
+			public FailureMode getFailureMode() {
+				return FailureMode.Retry;
+			}},
+			AddrUtil.getAddresses("127.0.0.1:11213"));
+	}
+
+	private void tryTimeout(String name, Runnable r) {
+		try {
+			r.run();
+			fail("Expected timeout in " + name);
+		} catch(OperationTimeoutException e) {
+			// pass
+		}
+	}
+
+	public void testCasTimeout() {
+		tryTimeout("cas", new Runnable() {public void run() {
+			client.cas("k", 1, "blah");
+		}});
+	}
+
+	public void testGetsTimeout() {
+		tryTimeout("gets", new Runnable() {public void run() {
+			client.gets("k");
+		}});
+	}
+
+	public void testGetTimeout() {
+		tryTimeout("get", new Runnable() {public void run() {
+			client.get("k");
+		}});
+	}
+
+	public void testGetBulkTimeout() {
+		tryTimeout("getbulk", new Runnable() {public void run() {
+			client.getBulk("k", "k2");
+		}});
+	}
+
+	public void testIncrTimeout() {
+		tryTimeout("incr", new Runnable() {public void run() {
+			client.incr("k", 1);
+		}});
+	}
+
+	public void testIncrWithDefTimeout() {
+		tryTimeout("incrWithDef", new Runnable() {public void run() {
+			client.incr("k", 1, 5);
+		}});
+	}
+
+}
