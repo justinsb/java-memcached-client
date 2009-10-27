@@ -160,7 +160,7 @@ public interface OperationFactory {
 	 *   Note that it returns more than one operation because a multi-get
 	 *   could potentially need to be played against a large number of
 	 *   underlying servers.  In this case, there's a separate operation for
-	 *   each, and callback fa�ade to reassemble them.  It is left up to the
+	 *   each, and callback facade to reassemble them.  It is left up to the
 	 *   operation pipeline to perform whatever optimization is required to
 	 *   turn these back into multi-gets.
 	 * </p>
